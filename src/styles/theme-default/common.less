@@ -1,6 +1,4 @@
-@import "./variables.less";
-@import "./mixins.less";
-
+@import "./lib.less";
 
 /* Overriding est variables */
 @support-ie-version: 9;
@@ -22,6 +20,14 @@ html {
   font-weight: @veui-font-weight-normal;
 }
 
+// only enable on Retina displays
+@media screen and (min-resolution: 2dppx) {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
 h1,
 h2,
 h3,
@@ -41,4 +47,12 @@ a {
   &:active {
     color: @veui-theme-color-active;
   }
+}
+
+input,
+button,
+textarea {
+  font: inherit;
+  font-weight: inherit;
+  color: inherit;
 }

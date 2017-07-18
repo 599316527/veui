@@ -2,8 +2,8 @@
   <div id="app" :class="{'console-expanded': console.expanded}">
     <nav id="main-nav">
       <h1>VEUI controls</h1>
-      <ul v-for="route in routes">
-        <li><router-link :to='route'>{{route.name}}</router-link></li>
+      <ul>
+        <li v-for="route in routes"><router-link :to='route'>{{route.name}}</router-link></li>
       </ul>
       <footer>© {{year}} Baidu, Inc.</footer>
     </nav>
@@ -78,8 +78,6 @@ export default {
   right: 0;
   bottom: 0;
   left: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 
   &.console-expanded {
     .output {
@@ -105,15 +103,18 @@ export default {
   font-weight: 300;
 
   h1 {
+    .centered-line(60px);
     border-bottom: 1px solid #eee;
     margin: 0;
-    padding: 1em 24px;
+    padding: 0 24px;
     font-size: 18px;
   }
 
   ul {
+    height: ~"calc(100vh - 105px)";
     margin: 0;
     padding: 0;
+    overflow: auto;
   }
 
   li {
@@ -134,6 +135,7 @@ export default {
   }
 
   footer {
+    border-top: 1px solid #eee;
     color: @veui-gray-color-weak;
     font-size: 12px;
     line-height: 45px;

@@ -1,5 +1,5 @@
 <template>
-  <button class="veui-button" :class="{'veui-button-loading': loading}" v-bind="attrs" @click="$emit('click', $event)">
+  <button class="veui-button" :class="{'veui-button-loading': loading}" v-bind.props="attrs" @click="$emit('click', $event)">
     <template v-if="!loading"><slot></slot></template>
     <template v-else>
       <slot name="loading">
@@ -23,7 +23,10 @@ export default {
     ui: String,
     disabled: Boolean,
     name: String,
-    type: String,
+    type: {
+      type: String,
+      default: 'button'
+    },
     value: String,
     autofocus: Boolean,
     loading: Boolean
@@ -43,7 +46,7 @@ export default {
 @import "../styles/theme-default/lib.less";
 
 .veui-button {
-  padding: 10px 20px;
+  padding: 9px 20px;
   min-width: 70px;
   height: @veui-height-normal;
   border: 1px solid @veui-theme-color-primary;
@@ -53,7 +56,7 @@ export default {
   user-select: none;
   vertical-align: middle;
   line-height: 1;
-  transition: all .2s;
+  .veui-button-transition();
 
   &:not(.veui-button-loading) {
     &:focus {
@@ -67,7 +70,7 @@ export default {
     }
 
     &:hover {
-      .veui-shadow();
+      .veui-shadow(extend);
     }
 
     &:active {
@@ -119,7 +122,8 @@ export default {
         background-color: @veui-gray-color-sup-4;
       }
 
-      &:disabled {
+      &:disabled,
+      &.veui-disabled {
         background-color: @veui-gray-color-sup-3;
         color: @veui-text-color-weak;
       }
@@ -133,8 +137,8 @@ export default {
 
     &:not(.veui-button-loading) {
       &:focus {
-        border-color: @veui-theme-color-secondary;
-        background-color: @veui-theme-color-secondary;
+        border-color: @veui-theme-color-hover;
+        background-color: @veui-theme-color-hover;
         color: #fff;
         .veui-shadow(none);
       }
@@ -148,6 +152,7 @@ export default {
       }
 
       &:active {
+        border-color: @veui-theme-color-active;
         background-color: @veui-theme-color-active;
         .veui-shadow(none);
       }
@@ -157,6 +162,17 @@ export default {
         color: #fff;
         .veui-shadow(none);
       }
+    }
+  }
+
+  &[ui~="alt"] {
+    background-color: @veui-gray-color-sup-3;
+    border-color: @veui-gray-color-sup-3;
+    color: @veui-text-color-normal;
+    .veui-shadow();
+
+    &:not(.veui-button-loading) {
+      .veui-button-alt();
     }
   }
 
@@ -202,14 +218,21 @@ export default {
   }
 
   &[ui~="large"] {
-    .padding(12px, _);
     height: @veui-height-large;
+    .padding(11px, _);
     font-size: @veui-font-size-large;
   }
 
   &[ui~="small"] {
-    .padding(8px, _);
+    .padding(7px, _);
     height: @veui-height-small;
+    font-size: @veui-font-size-small;
+  }
+
+  &[ui~="tiny"] {
+    min-width: auto;
+    height: @veui-height-tiny;
+    padding: 5px 10px;
     font-size: @veui-font-size-small;
   }
 
@@ -231,9 +254,13 @@ export default {
     &[ui~="small"] {
       width: @veui-height-small;
     }
+
+    &[ui~="tiny"] {
+      width: @veui-height-tiny;
+    }
   }
 
-  .fa-icon {
+  .veui-icon {
     max-width: 1em;
     vertical-align: text-top;
 

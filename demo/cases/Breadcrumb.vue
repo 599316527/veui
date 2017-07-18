@@ -1,15 +1,19 @@
 <template>
-<div>
-  <veui-breadcrumb :routers="items" @redirect="handleRedirect">
-    <template scope="scope">{{ scope.router.text }}</template>
-    <template slot="separator">&gt;</template>
-  </veui-breadcrumb>
-</div>
+  <article>
+    <h1><code>&lt;veui-breadcrumb&gt;</code></h1>
+    <p>
+      <veui-breadcrumb :routers="items" @redirect="handleRedirect">
+        <template scope="scope">{{ scope.router.text }}</template>
+        <template slot="separator">&gt;</template>
+      </veui-breadcrumb>
+    </p>
+  </article>
 </template>
 <script>
 import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
+  name: 'breadcrumb-demo',
   components: {
     'veui-breadcrumb': Breadcrumb
   },

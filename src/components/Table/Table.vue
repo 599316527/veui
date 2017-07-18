@@ -1,13 +1,13 @@
 <template>
 <table class="veui-table" :ui="ui">
   <colgroup>
-    <col v-if="selectable" width="60">
-    <col v-for="col in displayedColumns" :width="col.width">
+    <col v-if="selectable" width="60"></col>
+    <col v-for="col in displayedColumns" :width="col.width"></col>
   </colgroup>
   <table-head :columns="displayedColumns" :selectable="selectable" :select-status="selectStatus" @select="select" @sort="sort"></table-head>
   <slot name="foot"><table-foot v-if="hasFoot" :data="data" :columns="displayedColumns"></table-foot></slot>
   <tbody v-if="!data.length">
-    <tr><td class="veui-table-no-data" :colspan="displayedColumns.length"><slot name="no-data">没有数据</slot></td></tr>
+    <tr><td class="veui-table-no-data" :colspan="(selectable ? 1 : 0) + displayedColumns.length"><slot name="no-data">没有数据</slot></td></tr>
   </tbody>
   <template v-else>
     <table-body :data="data" :columns="displayedColumns" :selectable="selectable"
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { map, zipObject, intersection, isString, isArray, includes } from 'lodash'
+import { map, intersection, isString, isArray, includes, indexOf } from 'lodash'
 import Body from './Body'
 import Head from './Head'
 import Foot from './Foot'
@@ -50,12 +50,13 @@ export default {
     selectable: Boolean,
     order: [String, Boolean],
     orderBy: String,
-    columnFilter: Array
+    columnFilter: Array,
+    selected: Array
   },
   data () {
     return {
       columns: [],
-      selectedItems: {}
+      localSelectedKeys: this.selected || []
     }
   },
   computed: {
@@ -75,10 +76,15 @@ export default {
       }
       return keys.map(String)
     },
+    selectedItems () {
+      return (this.localSelectedKeys || []).reduce((selectedItems, key) => {
+        selectedItems[key] = this.getItem(key)
+        return selectedItems
+      }, {})
+    },
     selectStatus () {
       let keys = this.realKeys
-      let selectedKeys = Object.keys(this.selectedItems)
-      let inter = intersection(keys, selectedKeys)
+      let inter = intersection(keys, this.localSelectedKeys)
       if (!inter.length) {
         return 'none'
       }
@@ -95,28 +101,37 @@ export default {
     select (selected, index) {
       if (index !== undefined) {
         let item = this.data[index]
-        index = this.realKeys ? this.realKeys[index] : index
+        let key = this.realKeys[index]
         if (selected) {
-          this.$set(this.selectedItems, index, item)
+          this.localSelectedKeys.push(key)
         } else {
-          this.$delete(this.selectedItems, index)
+          this.localSelectedKeys.splice(indexOf(this.localSelectedKeys, key), 1)
         }
         this.$emit('select', selected, item, this.selectedItems)
       } else {
         if (selected) {
-          let items = zipObject(this.realKeys, this.data)
-          this.selectedItems = {
-            ...this.selectedItems,
-            ...items
-          }
+          this.localSelectedKeys = [...this.realKeys]
         } else {
-          this.selectedItems = {}
+          this.localSelectedKeys = []
         }
         this.$emit('select', selected, this.selectedItems)
       }
+      this.$emit('update:selected', this.localSelectedKeys)
+    },
+    getItem (key) {
+      return this.data[indexOf(this.realKeys, key)]
     },
     sort (field, order) {
       this.$emit('sort', field, order)
+    }
+  },
+  watch: {
+    selected (value) {
+      this.localSelectedKeys = value
+    },
+    realKeys (value) {
+      this.localSelectedKeys = intersection(this.localSelectedKeys, value)
+      this.$emit('update:selected', this.localSelectedKeys)
     }
   }
 }
@@ -171,20 +186,24 @@ export default {
     }
   }
 
-  .veui-table-no-data {
+  td&-no-data {
     text-align: center;
+  }
+
+  &-selected-row td {
+    background-color: @veui-theme-color-sup-4;
   }
 
   .veui-button + .veui-button {
     margin-left: 30px;
   }
 
-  .veui-table-header {
+  &-header {
     display: inline-block;
     vertical-align: middle;
   }
 
-  .veui-table-sorter {
+  &-sorter {
     margin-left: 5px;
     vertical-align: middle;
   }

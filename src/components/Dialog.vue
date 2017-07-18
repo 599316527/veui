@@ -1,8 +1,8 @@
 <template>
   <veui-overlay class="veui-dialog"
-    :open="$data._open"
+    :open="localOpen"
     mode="NORMAL"
-    :overlay-class="{ 'veui-dialog-box': true, 'veui-dialog-box-mask': modal }"
+    :overlay-class="mergedOverlayClass"
     :ui="ui"
     ref="overlay">
     <div class="veui-dialog-content"
@@ -13,25 +13,26 @@
         ref="head"
         v-drag>
         <span class="veui-dialog-content-head-title"
-          v-if="$data._title"
-          v-text="$data._title"></span>
+          v-if="localTitle"
+          v-text="localTitle"></span>
         <span class="veui-dialog-content-head-title" v-else><slot name="title">弹窗标题</slot></span>
         <a class="veui-dialog-content-head-close"
-          v-show="$data._closable"
+          v-show="localClosable"
           @click="hide"><icon name="close"></icon></a>
       </div>
-      <div ref="body" class="veui-dialog-content-body" :style="{ height: `${bodyHeight}px` }"><slot></slot></div>
+      <div ref="body" class="veui-dialog-content-body"><slot></slot></div>
       <div ref="foot" class="veui-dialog-content-foot"><slot name="foot"><veui-button ui="primary" @click="$emit('ok')">确定</veui-button><veui-button @click="$emit('cancel')">取消</veui-button></slot></div>
     </div>
   </veui-overlay>
 </template>
 
 <script>
-import { includes, upperFirst } from 'lodash'
+import { includes, upperFirst, isObject, isString, extend } from 'lodash'
 import Overlay from './Overlay'
-import 'vue-awesome/icons/close'
 import Button from './Button'
 import { ui } from '../mixins'
+import { drag } from '../directives'
+import 'vue-awesome/icons/close'
 
 export default {
   name: 'veui-dialog',
@@ -39,7 +40,8 @@ export default {
     'veui-overlay': Overlay,
     'veui-button': Button
   },
-  mixins: [ ui ],
+  directives: { drag },
+  mixins: [ui],
   props: {
     ui: String,
     modal: {
@@ -69,18 +71,24 @@ export default {
     draggable: {
       type: Boolean,
       default: false
+    },
+    overlayClass: {
+      validator (value) {
+        return isObject(value) || isString(value)
+      },
+      default: null
     }
   },
   data () {
     return {
-      _open: this.open,
-      _width: this.width,
-      _closable: this.closable,
-      _left: 0,
-      _top: 0,
-      _height: this.height,
-      _title: this.title || null,
+      localOpen: this.open,
+      localWidth: this.width,
+      localClosable: this.closable,
+      localHeight: this.height,
+      localTitle: this.title || null,
 
+      left: 0,
+      top: 0,
       isDragging: false,
       dragDistanceX: 0,
       dragDistanceY: 0,
@@ -89,9 +97,7 @@ export default {
       // 是否被拖拽过了。
       // 如果被拖拽过，那么在window resize的时候就不要纠正对话框的位置了
       // 在每次对话框显示的时候，这个值都会被重置为false
-      isDragged: false,
-
-      bodyHeight: 0
+      isDragged: false
     }
   },
   mounted () {
@@ -101,8 +107,8 @@ export default {
       }
 
       this.isDragging = true
-      this.dragInitX = this.$data._left
-      this.dragInitY = this.$data._top
+      this.dragInitX = this.left
+      this.dragInitY = this.top
     })
     this.$on('dragend', () => {
       if (!this.draggable) {
@@ -116,38 +122,54 @@ export default {
         return
       }
 
-      this.$data._left = this.dragInitX + distanceX
-      this.$data._top = this.dragInitY + distanceY
+      this.left = this.dragInitX + distanceX
+      this.top = this.dragInitY + distanceY
 
       this.isDragged = true
     })
+
+    // 一进来就要求把对话框展示出来，此时对话框肯定没被拖拽过，所以要设置一下对话框位置
+    if (this.localOpen) {
+      this[`set${upperFirst(this.position)}`]()
+    }
   },
   watch: {
     title (value) {
-      this.$data._title = value
+      this.localTitle = value
     },
     open (value) {
-      this.$data._open = value
+      this.localOpen = value
 
       if (value) {
-        this.$nextTick(() => {
-          this.bodyHeight = this.getBodyHeight()
-        })
         this.isDragged = false
-        this[`set${upperFirst(this.position)}`]()
       }
     },
     width (value) {
-      this.$data._width = value
+      this.localWidth = value
     },
     height (value) {
-      this.$data._height = value
+      this.localHeight = value
     },
     closable (value) {
-      this.$data._closable = value
+      this.localClosable = value
     }
   },
   computed: {
+    mergedOverlayClass () {
+      const klass = {}
+      if (isString(this.overlayClass)) {
+        this.overlayClass.split(/\s+/).forEach(cls => {
+          klass[cls] = true
+        })
+      } else {
+        extend(klass, this.overlayClass)
+      }
+
+      klass['veui-dialog-box'] = true
+      klass['veui-dialog-box-mask'] = this.modal
+
+      return klass
+    },
     position () {
       if (includes(this.uiProps, 'top')) {
         return 'top'
@@ -161,18 +183,29 @@ export default {
     },
     contentRectStyle () {
       return {
-        width: `${this.$data._width}px`,
-        height: `${this.$data._height}px`,
+        width: `${this.localWidth}px`,
+        height: `${this.localHeight}px`,
         left: 0,
         top: 0,
-        transform: `translateX(${this.$data._left}px) translateY(${this.$data._top}px)`
+        transform: `translate(${this.left}px,${this.top}px)`
       }
+    }
+  },
+  beforeUpdate () {
+    if (this.localOpen && !this.isDragged) {
+      // 只有在对话框显示出来了，并且没被拖拽过，才去纠正位置
+      this[`set${upperFirst(this.position)}`]()
+    }
+  },
+  updated () {
+    if (this.localOpen) {
+      this.$refs.body.style.height = `${this.getBodyHeight()}px`
     }
   },
   methods: {
     setPosition ({ topRatio = 0.5, leftRatio = 0.5 } = {}) {
-      this.$data._left = (window.innerWidth - this.$data._width) * leftRatio + document.body.scrollLeft
-      this.$data._top = (window.innerHeight - this.$data._height) * topRatio + document.body.scrollTop
+      this.left = (window.innerWidth - this.localWidth) * leftRatio + window.pageXOffset
+      this.top = (window.innerHeight - this.localHeight) * topRatio + window.pageYOffset
     },
     setCenter () {
       this.setPosition()
@@ -186,8 +219,8 @@ export default {
       return this.height - headHeight - footHeight
     },
     hide () {
-      this.$data._open = false
-      this.$emit('propchange', 'open', this.$data._open)
+      this.localOpen = false
+      this.$emit('update:open', this.localOpen)
     },
     focus () {
       this.$refs.overlay.focus()
@@ -208,78 +241,95 @@ export default {
 }
 </script>
 <style lang="less">
-  @import "../styles/theme-default/lib.less";
+@import "../styles/theme-default/lib.less";
 
-  .veui-dialog {
-    display: none;
+.veui-dialog {
+  display: none;
+
+  &-box {
+    position: relative;
+
+    &[ui~="reverse"] {
+      .veui-dialog-content {
+        border: 1px solid @veui-gray-color-sup-3;
+
+        &-head {
+          background: #fff;
+        }
+
+        &-head-title,
+        &-head-close {
+          color: @veui-theme-color-primary;
+        }
+      }
+    }
   }
 
-  .veui-dialog-box[ui~="reverse"] .veui-dialog-content-head {
-    background: #fff;
-  }
-  .veui-dialog-box[ui~="reverse"] .veui-dialog-content-head-title,
-  .veui-dialog-box[ui~="reverse"] .veui-dialog-content-head-close {
-    color: @veui-theme-color-primary;
-  }
-
-  .veui-dialog-box-mask {
+  &-box-mask {
+    position: absolute;
+    left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
     background: rgba(204, 204, 204, .6);
   }
 
-  .veui-dialog-draggable {
+  &-draggable {
     user-select: none;
     cursor: all-scroll;
   }
 
-  .veui-dialog-content {
-    background: #fff;
+  &-content {
     position: absolute;
-    box-shadow: 0px 2px 4px @veui-shadow-color-normal;
+    background: #fff;
     border-radius: 4px;
-  }
+    .veui-shadow(extend);
 
-  .veui-dialog-content-head,
-  .veui-dialog-content-body,
-  .veui-dialog-content-foot {
-    padding: 0 20px;
-  }
+    &-head,
+    &-body,
+    &-foot {
+      padding: 0 20px;
+    }
 
-  .veui-dialog-content-head {
-    height: 42px;
-    line-height: 42px;
-    background: @veui-theme-color-primary;
-    border-radius: 4px 4px 0 0;
-  }
+    &-head {
+      height: 42px;
+      line-height: 42px;
+      background: @veui-theme-color-primary;
+      border-radius: 4px 4px 0 0;
+    }
 
-  .veui-dialog-content-head-title {
-    font-weight: 400;
-    color: #fff;
-    font-size: 16px;
-  }
+    &-head-title {
+      font-weight: 400;
+      color: #fff;
+      font-size: 16px;
+    }
 
-  .veui-dialog-content-body {
-    padding-top: 20px;
-  }
+    &-body {
+      padding-top: 20px;
+      box-sizing: border-box;
+    }
 
-  .veui-dialog-content-foot {
-    padding: 20px;
-  }
+    &-foot {
+      padding: 20px;
+    }
 
-  .veui-dialog-content-foot .veui-button {
-    margin-right: 10px;
-  }
+    &-foot .veui-button {
+      margin-right: 10px;
+    }
 
-  .veui-dialog-content-head-close {
-    color: #fff;
-    float: right;
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-    text-align: center;
-    font-size: 16px;
-    margin-top: 12px;
-    cursor: pointer;
+    &-head-close,
+    &-head-close:hover {
+      color: #fff;
+      float: right;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      text-align: center;
+      font-size: 16px;
+      margin-top: 12px;
+      cursor: pointer;
+    }
   }
+}
+
 </style>

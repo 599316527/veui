@@ -2,11 +2,11 @@
 
 <script>
 import { pick } from 'lodash'
-import mixin from './mixin'
+import { table } from '../../mixins'
 
 export default {
   name: 'veui-table-column',
-  mixins: [mixin],
+  mixins: [table],
   props: {
     title: String,
     field: {
@@ -24,7 +24,7 @@ export default {
     }
     let slots = this.$scopedSlots
     table.columns.push({
-      ...pick(this.$props, 'title', 'field', 'sortable'),
+      ...pick(this.$props, 'title', 'field', 'sortable', 'width'),
       hasFoot: !!slots.foot,
       renderBody: slots.default
         ? data => slots.default(data)
