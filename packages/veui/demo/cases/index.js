@@ -25,6 +25,7 @@ import Tabs from './Tabs'
 import Switch from './Switch'
 // import ButtonGroup from './ButtonGroup'
 import Searchbox from './Searchbox'
+import ColorPicker from './ColorPicker'
 
 export default [
   {
@@ -171,6 +172,11 @@ export default [
     path: '/search-box',
     name: 'Searchbox',
     component: Searchbox
+  },
+  {
+    path: '/color-picker',
+    name: 'ColorPicker',
+    component: ColorPicker
   }
   // {
   //   path: '/buttonGroup',

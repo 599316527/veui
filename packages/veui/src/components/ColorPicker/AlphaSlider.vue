@@ -1,0 +1,42 @@
+<template>
+<div class="veui-color-alpha-slider">
+  <veui-slider :value="value" @update:value="handleValueUpdate"
+    :direction="direction" v-bind="direction === 0 ? horizonalSliderSize : verticalSliderSize">
+    <div :style="{
+      width: '100%',
+      height: '100%',
+      background: 'linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,1))'
+    }"></div>
+  </veui-slider>
+</div>
+</template>
+
+<script>
+import {horizonalSliderSize, verticalSliderSize} from './slider-sizes'
+import Slider from './Slider'
+
+export default {
+  name: 'ColorAlphaSlider',
+  components: {
+    'veui-slider': Slider
+  },
+  props: {
+    value: Number,
+    direction: Number
+  },
+  data () {
+    return {
+      horizonalSliderSize,
+      verticalSliderSize
+    }
+  },
+  computed: {
+
+  },
+  methods: {
+    handleValueUpdate (val) {
+      this.$emit('update:value', val)
+    }
+  }
+}
+</script>

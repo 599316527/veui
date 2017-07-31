@@ -36,6 +36,18 @@
     "path": "CheckboxGroup.vue"
   },
   {
+    "name": "ColorPicker",
+    "path": "ColorPicker"
+  },
+  {
+    "name": "ColorPicker",
+    "path": "ColorPicker/index.js"
+  },
+  {
+    "name": "ColorSwatch",
+    "path": "ColorSwatch.js"
+  },
+  {
     "name": "Column",
     "path": "Column.js"
   },
