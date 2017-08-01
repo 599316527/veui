@@ -1,7 +1,7 @@
 <template>
 <div class="veui-color-alpha-slider">
   <veui-slider :value="value" @update:value="handleValueUpdate"
-    :direction="direction" v-bind="direction === 0 ? horizonalSliderSize : verticalSliderSize">
+    :direction="direction" v-bind="sliderSize">
     <div :style="{
       width: '100%',
       height: '100%',
@@ -25,13 +25,12 @@ export default {
     direction: Number
   },
   data () {
-    return {
-      horizonalSliderSize,
-      verticalSliderSize
-    }
+    return {}
   },
   computed: {
-
+    sliderSize () {
+      return this.direction === 0 ? horizonalSliderSize : verticalSliderSize
+    }
   },
   methods: {
     handleValueUpdate (val) {

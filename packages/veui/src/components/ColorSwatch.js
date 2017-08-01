@@ -1,1 +1,1 @@
-export { default } from './ColorPicker/Swatch'
+export { default } from './ColorPicker/ColorSwatch'

@@ -3,7 +3,7 @@
   width: width + 'px',
   height: height + 'px'
 }">
-  <div class="veui-transparency-grid-background">
+  <div class="veui-color-swatch-bg">
     <div :style="{'background-color': color}"></div>
   </div>
 </div>
