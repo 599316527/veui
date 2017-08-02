@@ -19,7 +19,8 @@ export default {
     'veui-input': Input
   },
   props: {
-    alpha: Number
+    value: Number,
+    percentage: Boolean
   },
   data () {
     return {
@@ -28,11 +29,17 @@ export default {
   },
   computed: {
     alphaPercentage () {
-      return this.alpha * 100 + '%'
+      return this.value * 100 + (this.percentage ? '%' : '')
+    },
+    matchRegexp () {
+      return this.percentage ? /^\d+(\.\d+)?%$/ : /^\d+(\.\d+)?$/
     }
   },
   methods: {
     handleValueInput (val) {
+      if (!this.matchRegexp.test(val)) {
+        return
+      }
       val = parseFloat(val) / 100 || 1
       val = Math.min(1, Math.max(0, val))
       this.$emit('update:alpha', val)

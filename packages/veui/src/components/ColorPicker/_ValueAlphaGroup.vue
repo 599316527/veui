@@ -11,7 +11,7 @@
     </div>
     <div class="veui-color-value-alpha-group-separator"></div>
     <div class="veui-color-value-alpha-group-alpha">
-      <veui-color-value-alpha :alpha="alpha"
+      <veui-color-value-alpha :value="alpha" :percentage="true"
         @update:alpha="handleAlphaValueUpdate"
       ></veui-color-value-alpha>
     </div>

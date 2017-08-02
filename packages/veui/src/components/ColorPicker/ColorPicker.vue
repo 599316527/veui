@@ -29,7 +29,7 @@
         @update:hsl="handleHslValueUpdate"
       ></veui-color-value-group>
     </div>
-    <div v-else>☹️</div>
+    <div v-else>Oops!</div>
   </div>
   <div class="veui-color-picker-extra">
     <slot></slot>
