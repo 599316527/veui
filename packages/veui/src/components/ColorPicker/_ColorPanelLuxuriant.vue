@@ -65,12 +65,6 @@ export default {
     handleHueValueUpdate (hue) {
       this.$emit('update:hsl', hue, this.saturation, this.lightness)
     },
-    handleSaturationValueUpdate (saturation) {
-      this.$emit('update:hsl', this.hue, saturation, this.lightness)
-    },
-    handleLightnessValueUpdate (lightness) {
-      this.$emit('update:hsl', this.hue, this.saturation, lightness)
-    },
     handleAlphaValueUpdate (val) {
       this.$emit('update:alpha', val)
     },

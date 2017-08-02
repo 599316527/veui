@@ -41,7 +41,7 @@ export default {
   },
   computed: {},
   methods: {
-    handleHueValueInput(val) {
+    handleHueValueInput (val) {
       val = parseInt(val, 10)
       val = Math.min(359, Math.max(0, val % 360))
       if (isNaN(val)) {
@@ -49,7 +49,7 @@ export default {
       }
       this.$emit('update:hsl', val, this.saturation, this.lightness)
     },
-    handleSaturationValueInput(val) {
+    handleSaturationValueInput (val) {
       val = parseFloat(val, 10)
       val = Math.min(1, Math.max(0, val))
       if (isNaN(val)) {
@@ -57,7 +57,7 @@ export default {
       }
       this.$emit('update:hsl', this.hue, val, this.lightness)
     },
-    handleLightnessValueInput(val) {
+    handleLightnessValueInput (val) {
       val = parseFloat(val, 10)
       val = Math.min(1, Math.max(0, val))
       if (isNaN(val)) {

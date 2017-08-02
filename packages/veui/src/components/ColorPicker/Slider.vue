@@ -33,7 +33,10 @@ export default {
   name: 'Slider',
   props: {
     value: Number,
-    direction: Number,
+    direction: {
+      type: Number,
+      default: 0
+    },
     stripWidth: Number,
     stripHeight: Number,
     blockWidth: Number,

@@ -52,6 +52,7 @@ export default {
       if (isNaN(val)) {
         return
       }
+      // 跟 ShadeField 一样的问题，要一起往外传
       this.$emit('update:hsl', ...rgb2hsl(val, ...this.rgbValue.slice(1)))
     },
     handleGreenValueInput (val) {

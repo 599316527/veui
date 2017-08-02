@@ -12,6 +12,9 @@
       <!-- v-model="color" OR :color.sync OR @update:color="val => color = val" -->
       <veui-color-picker v-model="color" ui="luxuriant"></veui-color-picker>
     </section>
+    <section class="color-pickers">
+      <veui-color-picker v-model="color"></veui-color-picker>
+    </section>
   </article>
 </template>
 
