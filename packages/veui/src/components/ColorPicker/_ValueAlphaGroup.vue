@@ -1,7 +1,5 @@
 <template>
-<div class="veui-color-value-alpha-group" :class="{
-  ['veui-color-value-alpha-group-' + variant]: true
-}">
+<div class="veui-color-value-alpha-group" :ui="variant">
   <div class="veui-color-value-alpha-group-values">
     <div class="veui-color-value-alpha-group-color">
       <component :is="'veui-color-value-' + variant"
@@ -9,7 +7,7 @@
         @update:hsl="handleHslValueUpdate"
       ></component>
     </div>
-    <div class="veui-color-value-alpha-group-separator"></div>
+    <div class="veui-color-value-alpha-group-separator" @click="toggleColorFormatVariant"></div>
     <div class="veui-color-value-alpha-group-alpha">
       <veui-color-value-alpha :value="alpha" :percentage="true"
         @update:alpha="handleAlphaValueUpdate"
@@ -69,6 +67,11 @@ export default {
     },
     handleAlphaValueUpdate (val) {
       this.$emit('update:alpha', val)
+    },
+    toggleColorFormatVariant () {
+      let i = variants.indexOf(this.variant)
+      i = (i + 1) % variants.length
+      this.variant = variants[i]
     }
   }
 }

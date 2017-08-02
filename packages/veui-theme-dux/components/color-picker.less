@@ -108,6 +108,7 @@
     }
   }
 
+  .veui-color-value-hsl,
   .veui-color-value-rgb {
     .veui-color-value {
       width: 40px;
@@ -136,11 +137,30 @@
       }
     }
     &-hex {
+      float: left;
       width: 140px;
     }
     &-alpha {
       width: 46px;
       float: right;
+    }
+  }
+
+  &-separator {
+    float: left;
+    width: 14px;
+    height: 30px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='20'><circle cx='2' cy='2' r='2' fill='#D8D8D8'/><circle cx='2' cy='10' r='2' fill='#666666'/><circle cx='2' cy='18' r='2' fill='#D8D8D8'/></svg>") no-repeat center / 4px auto;
+  }
+
+  &[ui=hex] {
+    .veui-color-value-alpha-group-separator {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='20'><circle cx='2' cy='2' r='2' fill='#666666'/><circle cx='2' cy='10' r='2' fill='#D8D8D8'/><circle cx='2' cy='18' r='2' fill='#D8D8D8'/></svg>");
+    }
+  }
+  &[ui=hsl] {
+    .veui-color-value-alpha-group-separator {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='20'><circle cx='2' cy='2' r='2' fill='#D8D8D8'/><circle cx='2' cy='10' r='2' fill='#D8D8D8'/><circle cx='2' cy='18' r='2' fill='#666666'/></svg>");
     }
   }
 }

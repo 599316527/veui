@@ -21,8 +21,8 @@
         'background-color': `hsla(${hue}, ${saturation * 100}%, ${lightness * 100}%, ${alpha})`
       }"></div>
       <div :style="{
-        'background-color': `hsla(${hue}, ${saturation * 100}%, ${lightness * 100}%, ${alpha})`
-      }">TODO</div>
+        'background-color': `yellow`
+      }"><small style="font-size: 10px;">TODO:外面的|内部的?</small></div>
     </div>
     <div class="veui-color-panel-luxuriant-color-diff-text">当前</div>
   </div>

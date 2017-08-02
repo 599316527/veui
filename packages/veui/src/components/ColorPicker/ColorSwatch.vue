@@ -63,7 +63,11 @@ export default {
   },
   computed: {
     parsedColor () {
-      return color2hsla(this.color)
+      let colors = color2hsla(this.color)
+      return Object.keys(colors).reduce(function (obj, key) {
+        obj[key] = Math.round(colors[key] * 100) / 100
+        return obj
+      }, {})
     }
 
   },
