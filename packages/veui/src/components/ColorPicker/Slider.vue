@@ -6,7 +6,7 @@
   height: `${sliderHeight}px`,
   'padding-top': `${Math.max(0, (blockHeight - stripHeight) / 2)}px`,
   // hack一下，处理两个方向的话算起来很烦，不如直接旋转一下好了（滑稽表情
-  'transform': direction === 0 ? '' : 'rotate(90deg)',  
+  'transform': direction === 0 ? '' : 'rotate(90deg)',
   'transform-origin': `${sliderHeight / 2}px center`
 }">
   <div class="veui-slider-strip" @click="handleStripClick" :style="{
@@ -53,16 +53,15 @@ export default {
       return this.direction === 0 ? 'X' : 'Y'
     },
     sliderWidth () {
-      return this.stripWidth
+      return this.direction === 0 ? this.stripWidth : this.sliderHeight
     },
     sliderHeight () {
       return Math.max(this.stripHeight, this.blockHeight)
     }
   },
   methods: {
-    handleStripClick (evt) {
-      let offsetValue = evt['offset' + this.coordinate]
-      let value = offsetValue / this.stripWidth
+    handleStripClick ({offsetX}) {
+      let value = offsetX / this.stripWidth
       value = Math.min(1, Math.max(0, value))
       this.$emit('update:value', value)
     }

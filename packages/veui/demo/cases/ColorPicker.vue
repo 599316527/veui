@@ -2,12 +2,15 @@
   <article>
     <h1><code>&lt;veui-color-picker&gt;</code></h1>
     <section class="color-swatches">
-      <veui-color-swatch color="#4a90e2"></veui-color-swatch>
-      <veui-color-swatch color="rgba(74, 144, 226, .7)"></veui-color-swatch>
-      <veui-color-swatch color="rgba(74, 144, 226, .3)"></veui-color-swatch>
+      <veui-color-swatch :color="color"></veui-color-swatch>
+      <div class="color-text">{{ color }}</div>
     </section>
     <section class="color-pickers">
-      <veui-color-picker color="#4a90e2"></veui-color-picker>
+      <veui-color-picker v-model="color" ui="barren"></veui-color-picker>
+    </section>
+    <section class="color-pickers">
+      <!-- v-model="color" OR :color.sync OR @update:color="val => color = val" -->
+      <veui-color-picker v-model="color" ui="luxuriant"></veui-color-picker>
     </section>
   </article>
 </template>
@@ -24,7 +27,7 @@ export default {
   },
   data () {
     return {
-
+      color: 'hsla(123, 54%, 43%, 0.9)'
     }
   },
   methods: {
@@ -47,9 +50,12 @@ section {
 .color-swatches {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 
-  .veui-color-swatch {
-    margin-right: 2em;
+  .color-text {
+    margin-left: 1.2em;
+    font-size: 1.2em;
+    font-family: monospace;
   }
 }
 </style>

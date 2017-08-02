@@ -3,7 +3,7 @@
   width: width + 'px',
   height: height + 'px'
 }">
-  <div class="veui-color-shade-field-shade" @click="handleShadeFieldClick">
+  <div class="veui-color-shade-field-shade" ref="field" @click="handleShadeFieldClick">
     <div class="veui-color-shade-field-saturation" :style="{
       'background-image': `linear-gradient(to right, #fff, hsl(${hue}, 100%, 50%))`
     }"></div>
@@ -14,7 +14,7 @@
   <div class="veui-color-shade-field-aperture" v-drag :style="{
     'background-color': `hsl(${hue}, ${saturation * 100}%, ${lightness * 100}%)`,
     transform: `translate(${apertureX - 6}px, ${apertureY - 6}px)`
-  }"></div>
+  }" @click.stop></div>
 </div>
 </template>
 
@@ -51,10 +51,10 @@ export default {
     }
   },
   methods: {
-    handleShadeFieldClick ({offsetX, offsetY}) {
+    handleShadeFieldClick ({clientX, clientY, offsetX, offsetY}) {
+      // console.log('offsetX', offsetX, offsetY)
       let {saturation, lightness} = calculateSaturationLightness(offsetX, offsetY, this.width, this.height)
-      this.$emit('update:saturation', saturation)
-      this.$emit('update:lightness', lightness)
+      this.$emit('update:satlig', saturation, lightness)
     }
   },
   mounted () {
@@ -71,8 +71,9 @@ export default {
         this.dragInitX + distanceX, this.dragInitY + distanceY,
         this.width, this.height
       )
-      this.$emit('update:saturation', saturation)
-      this.$emit('update:lightness', lightness)
+      // 得合在一起传出去(satlig=saturation+lightness)。因为要冒泡到 ColorPicker format成字符串再传回来
+      // 如果分开的话，后一个到达 ColorPicker 的时候前一个还没生效，所以使用原来的值，导致前一个无法改变
+      this.$emit('update:satlig', saturation, lightness)
     })
   }
 }
