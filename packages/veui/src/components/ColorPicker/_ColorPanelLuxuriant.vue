@@ -4,14 +4,20 @@
   <veui-color-shade-field :width="220" :height="220" :hue="hue"
     :saturation="saturation" :brightness="brightness"
     @update:satbri="handleSatbriValueUpdate"
+    @dragstart="handleDragStart"
+    @dragend="handleDragEnd"
   ></veui-color-shade-field>
 
   <veui-color-alpha-slider :value="alpha" :direction="1"
     @update:value="handleAlphaValueUpdate"
+    @dragstart="handleDragStart"
+    @dragend="handleDragEnd"
   ></veui-color-alpha-slider>
 
   <veui-color-hue-slider :value="hue" :direction="1"
     @update:value="handleHueValueUpdate"
+    @dragstart="handleDragStart"
+    @dragend="handleDragEnd"
   ></veui-color-hue-slider>
 
   <div class="veui-color-panel-luxuriant-color-diff">
@@ -21,8 +27,8 @@
         'background-color': currentColor
       }"></div>
       <div :style="{
-        'background-color': `yellow`
-      }"><small style="font-size: 10px;">TODO:外面的|内部的?</small></div>
+        'background-color': previousColor || currentColor
+      }"></div>
     </div>
     <div class="veui-color-panel-luxuriant-color-diff-text">当前</div>
   </div>
@@ -56,7 +62,7 @@ export default {
   },
   data () {
     return {
-
+      previousColor: ''
     }
   },
   computed: {
@@ -88,6 +94,14 @@ export default {
         h: this.hue,
         s,
         v
+      })
+    },
+    handleDragStart () {
+      this.previousColor = this.currentColor
+    },
+    handleDragEnd () {
+      this.$nextTick(() => {
+        this.previousColor = this.currentColor
       })
     }
   }

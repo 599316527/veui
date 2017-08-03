@@ -1,7 +1,9 @@
 <template>
 <div class="veui-color-hue-slider">
-  <veui-slider :value="progress" @update:value="handleValueUpdate"
-    :direction="direction" v-bind="sliderSize">
+  <veui-slider :value="progress" :direction="direction" v-bind="sliderSize"
+    @update:value="handleValueUpdate"
+    @dragstart="$emit('dragstart')"
+    @dragend="$emit('dragend')">
     <div :style="{
       width: '100%',
       height: '100%',

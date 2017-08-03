@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     alphaPercentage () {
-      return this.value * 100 + (this.percentage ? '%' : '')
+      return Math.round(this.value * 100) + (this.percentage ? '%' : '')
     },
     matchRegexp () {
       return this.percentage ? /^\d+(\.\d+)?%$/ : /^\d+(\.\d+)?$/

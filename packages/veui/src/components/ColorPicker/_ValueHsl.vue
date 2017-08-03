@@ -48,7 +48,7 @@ export default {
         s: this.saturation,
         v: this.brightness
       }).toHsl()
-      hsl.h = Math.round(hsl.h * 100) / 100
+      hsl.h = Math.round(hsl.h)
       hsl.s = Math.round(hsl.s * 100) + '%'
       hsl.l = Math.round(hsl.l * 100) + '%'
       return hsl

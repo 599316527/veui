@@ -45,6 +45,8 @@ import ValueGroup from './_ValueGroup'
 import ColorPanelLuxuriant from './_ColorPanelLuxuriant'
 import ColorPanelStandard from './_ColorPanelStandard'
 
+const colorValuePrecision = 1e4
+
 export default {
   name: 'ColorPicker',
   components: {
@@ -65,16 +67,41 @@ export default {
     event: 'update:color'
   },
   data () {
-    return {}
+    return {
+      previousHsb: {}
+    }
   },
   computed: {
     hsb () {
-      return tinycolor(this.color).toHsv()
+      let prevHsb = this.previousHsb
+      let hsb = tinycolor(this.color).toHsv()
+
+      // fix
+      if (prevHsb.h % 360 === hsb.h % 360) {
+        // 因为色相是 360度循环的，360 被 tinycolor 转换成了 0，直接用的话会导致滑块跳变，所以这个特殊处理下
+        hsb.h = prevHsb.h
+      }
+      if (tinycolor.equals(hsb, prevHsb)) {
+        // 纯黑色情况下，传出再传入的 hsv 不一样，导致信息丢失，这里恢复一下，不然取色圈会跳变
+        // hsv(40, 0.001, 0.001) -> rgb(0, 0, 0) -> hsv(0, 0, 0)
+        hsb.h = prevHsb.h
+        hsb.s = prevHsb.s
+      }
+
+      return hsb
     }
   },
   methods: {
     updateColor (color) {
-      this.$emit('update:color', tinycolor(color).toHslString())
+      // console.log(color)
+      this.previousHsb = color
+      let {h, s, l, a} = tinycolor(color).toHsl()
+      h = Math.round(h % 360 * colorValuePrecision) / colorValuePrecision
+      s = Math.round(s * 100 * colorValuePrecision) / colorValuePrecision
+      l = Math.round(l * 100 * colorValuePrecision) / colorValuePrecision
+      a = Math.round(a * colorValuePrecision) / colorValuePrecision
+      color = a === 1 ? `hsl(${h}, ${s}%, ${l}%)` : `hsla(${h}, ${s}%, ${l}%, ${a})`
+      this.$emit('update:color', color)
     },
     handleAlphaValueUpdate (alpha) {
       this.updateColor(Object.assign({}, this.hsb, {a: alpha}))
