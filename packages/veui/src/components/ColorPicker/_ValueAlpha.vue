@@ -1,10 +1,11 @@
 <template>
 <div class="veui-color-value-alpha">
   <div class="veui-color-value">
-    <veui-input type="text" ref="alphaValue"
+    <veui-input type="text" ref="alphaValue" v-numeric
       :value="alphaPercentage"
       :readonly="readonly"
       @input="handleValueInput"
+      @keyup.up.down.native="handleValueInput($event.target.value)"
       @blur="handleValueBlur"
     ></veui-input>
   </div>
@@ -14,11 +15,15 @@
 <script>
 import Input from '../Input'
 import {clamp} from 'lodash'
+import { numeric } from '../../directives'
 
 export default {
   name: 'ColorValueAlpha',
   components: {
     'veui-input': Input
+  },
+  directives: {
+    numeric
   },
   props: {
     value: Number,
@@ -43,6 +48,7 @@ export default {
   },
   methods: {
     handleValueInput (val) {
+      console.log(val)
       if (!this.matchRegexp.test(val)) {
         return
       }

@@ -1,21 +1,24 @@
 <template>
 <div class="veui-color-value-hsl">
   <div class="veui-color-value">
-    <veui-input type="text" ref="hueValue" :value="hsl.h" :readonly="readonly"
+    <veui-input type="text" ref="hueValue" :value="hsl.h" :readonly="readonly" v-numeric
       @input="handleHueValueInput"
       @blur="handleValueBlur"
+      @keyup.up.down.native="handleHueValueInput($event.target.value)"
     ></veui-input>
   </div>
   <div class="veui-color-value">
-    <veui-input type="text" ref="saturationValue" :value="hsl.s" :readonly="readonly"
+    <veui-input type="text" ref="saturationValue" :value="hsl.s" :readonly="readonly" v-numeric
       @input="handleSaturationValueInput"
       @blur="handleValueBlur"
+      @keyup.up.down.native="handleSaturationValueInput($event.target.value)"
     ></veui-input>
   </div>
   <div class="veui-color-value">
-    <veui-input type="text" ref="lightnessValue" :value="hsl.l" :readonly="readonly"
+    <veui-input type="text" ref="lightnessValue" :value="hsl.l" :readonly="readonly" v-numeric
       @input="handleLightnessValueInput"
       @blur="handleValueBlur"
+      @keyup.up.down.native="handleLightnessValueInput($event.target.value)"
     ></veui-input>
   </div>
 </div>
@@ -25,11 +28,15 @@
 import Input from '../Input'
 import tinycolor from 'tinycolor2'
 import {clamp} from 'lodash'
+import { numeric } from '../../directives'
 
 export default {
   name: 'ColorValueHsl',
   components: {
     'veui-input': Input
+  },
+  directives: {
+    numeric
   },
   props: {
     hue: Number,

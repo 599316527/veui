@@ -2,10 +2,10 @@
   <article>
     <h1><code>&lt;veui-color-picker&gt;</code></h1>
 
-    <section class="color-text" :style="{
+    <div class="color-text" :style="{
       color,
       'text-shadow': `1px 1px 1px ${kolor}`
-    }">{{ color }}</section>
+    }">{{ color }}</div>
 
     <h2>色样</h2>
     <section class="color-swatches">
@@ -91,11 +91,12 @@ export default {
   },
   computed: {
     kolor () {
-      let {r, g, b} = tinycolor(this.color).toRgb()
+      let {r, g, b, a} = tinycolor(this.color).toRgb()
       return tinycolor({
         r: 0xFF - r,
         g: 0xFF - g,
-        b: 0xFF - b
+        b: 0xFF - b,
+        a: a
       }).toRgbString()
     }
   },

@@ -1,21 +1,24 @@
 <template>
 <div class="veui-color-value-rgb">
   <div class="veui-color-value">
-    <veui-input type="text" ref="redValue" :value="rgb.r" :readonly="readonly"
+    <veui-input type="text" ref="redValue" :value="rgb.r" :readonly="readonly" v-numeric.nodecimals
       @input="handleRedValueInput"
       @blur="handleValueBlur"
+      @keyup.up.down.native="handleRedValueInput($event.target.value)"
     ></veui-input>
   </div>
   <div class="veui-color-value">
-    <veui-input type="text" ref="greenValue" :value="rgb.g" :readonly="readonly"
+    <veui-input type="text" ref="greenValue" :value="rgb.g" :readonly="readonly" v-numeric.nodecimals
       @input="handleGreenValueInput"
       @blur="handleValueBlur"
+      @keyup.up.down.native="handleGreenValueInput($event.target.value)"
     ></veui-input>
   </div>
   <div class="veui-color-value">
-    <veui-input type="text" ref="blueValue" :value="rgb.b" :readonly="readonly"
+    <veui-input type="text" ref="blueValue" :value="rgb.b" :readonly="readonly" v-numeric.nodecimals
       @input="handleBlueValueInput"
       @blur="handleValueBlur"
+      @keyup.up.down.native="handleBlueValueInput($event.target.value)"
     ></veui-input>
   </div>
 </div>
@@ -25,11 +28,15 @@
 import tinycolor from 'tinycolor2'
 import {clamp} from 'lodash'
 import Input from '../Input'
+import { numeric } from '../../directives'
 
 export default {
   name: 'ColorValueRgb',
   components: {
     'veui-input': Input
+  },
+  directives: {
+    numeric
   },
   props: {
     hue: Number,

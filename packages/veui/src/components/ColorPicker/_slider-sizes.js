@@ -1,3 +1,7 @@
+/**
+ * @file 内部滑动条的尺寸
+ * @author Kyle He (me@kylehe.me)
+ */
 
 export const horizonalSliderSize = {
   stripWidth: 150,
