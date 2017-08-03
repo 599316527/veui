@@ -1,14 +1,16 @@
 <template>
 <div class="veui-color-palette" :ui="ui">
   <div class="veui-color-palette-colors" ref="colors">
-    <div class="veui-color-palette-color" :class="{
-      'veui-color-palette-color-outside': i === dragItem.index && dragItem.outside
-    }" v-for="(color, i) in colors"
-      :key="i" @click="handleColorSelect(i)" v-drag :style="{
+    <div class="veui-color-palette-color" v-for="(color, i) in colors" :key="i" v-drag
+      :class="{
+        'veui-color-palette-color-outside': i === dragItem.index && dragItem.outside
+      }"
+      :style="{
         transform: i === dragItem.index
           ? `translate(${dragItem.distanceX}px, ${dragItem.distanceY}px)`
           : ''
-      }">
+      }"
+      @click="handleColorClick(i)">
       <div>
         <div :data-index="i" :style="{
           'background-color': color
@@ -70,12 +72,18 @@ export default {
 
   },
   methods: {
-    handleColorSelect (i) {
+    handleColorClick (i) {
+      // 如果没有拖动(drag)，就是点击，否则不处理，防止拖动误判为点击
+      if (!this.removable && this.mouseupMark) {
+        return
+      }
       this.$emit(this.removable ? 'remove' : 'select', i)
     }
   },
   mounted () {
     this.$on('dragstart', ({event: {target}}) => {
+      this.mouseupMark = 0
+
       let {top: targetTop, left: targetLeft} = target.getBoundingClientRect()
       this.dragItem.top = targetTop
       this.dragItem.left = targetLeft
@@ -92,7 +100,6 @@ export default {
       this.dragItem.index = parseInt(target.dataset.index, 10)
     })
     this.$on('dragend', ({event}) => {
-      event.stopPropagation()
       let removeIndex = this.dragItem.index
       this.dragItem.index = -1
       if (this.dragItem.outside) {
@@ -100,6 +107,7 @@ export default {
       }
     })
     this.$on('drag', ({distanceX, distanceY}) => {
+      this.mouseupMark = 1
       this.dragItem.distanceX = distanceX
       this.dragItem.distanceY = distanceY
       this.dragItem.outside = isDragItemOutsideOfField(
