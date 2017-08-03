@@ -3,6 +3,7 @@
   <div class="veui-color-value">
     <veui-input type="text" ref="alphaValue"
       :value="alphaPercentage"
+      :readonly="readonly"
       @input="handleValueInput"
       @blur="handleValueBlur"
     ></veui-input>
@@ -21,7 +22,11 @@ export default {
   },
   props: {
     value: Number,
-    percentage: Boolean
+    percentage: Boolean,
+    readonly: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {

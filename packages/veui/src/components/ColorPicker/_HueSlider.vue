@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import {horizonalSliderSize, verticalSliderSize} from './slider-sizes'
+import {horizonalSliderSize, verticalSliderSize} from './_slider-sizes'
 import Slider from './Slider'
 
 export default {

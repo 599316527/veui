@@ -2,14 +2,14 @@
 <div class="veui-color-value-alpha-group" :ui="variant">
   <div class="veui-color-value-alpha-group-values">
     <div class="veui-color-value-alpha-group-color">
-      <component :is="'veui-color-value-' + variant"
+      <component :is="'veui-color-value-' + variant" :readonly="readonly"
         :hue="hue" :saturation="saturation" :brightness="brightness"
         @update:hsb="handleHsbValueUpdate"
       ></component>
     </div>
     <div class="veui-color-value-alpha-group-separator" @click="toggleColorFormatVariant"></div>
     <div class="veui-color-value-alpha-group-alpha">
-      <veui-color-value-alpha :value="alpha" :percentage="true"
+      <veui-color-value-alpha :value="alpha" :percentage="true" :readonly="readonly"
         @update:alpha="handleAlphaValueUpdate"
       ></veui-color-value-alpha>
     </div>
@@ -51,7 +51,11 @@ export default {
     hue: Number,
     saturation: Number,
     brightness: Number,
-    alpha: Number
+    alpha: Number,
+    readonly: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {

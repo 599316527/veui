@@ -19,6 +19,9 @@
       <veui-icon name="plus"></veui-icon>
     </div>
   </div>
+  <div class="veui-color-palette-extra">
+    <slot></slot>
+  </div>
 </div>
 </template>
 
@@ -41,7 +44,10 @@ export default {
         return []
       }
     },
-    ui: String
+    ui: {
+      type: String,
+      default: 'normal'
+    }
   },
   data () {
     return {

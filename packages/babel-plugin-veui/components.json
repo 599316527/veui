@@ -36,20 +36,28 @@
     "path": "CheckboxGroup.vue"
   },
   {
+    "name": "ColorPalette",
+    "path": "ColorPicker/ColorPalette.vue"
+  },
+  {
     "name": "ColorPicker",
     "path": "ColorPicker/ColorPicker.vue"
   },
   {
-    "name": "Palette",
-    "path": "ColorPicker/Palette.vue"
+    "name": "ColorSwatch",
+    "path": "ColorPicker/ColorSwatch.vue"
   },
   {
     "name": "Slider",
     "path": "ColorPicker/Slider.vue"
   },
   {
-    "name": "Swatch",
-    "path": "ColorPicker/Swatch.vue"
+    "name": "color-converter",
+    "path": "ColorPicker/color-converter.js"
+  },
+  {
+    "name": "color-utils",
+    "path": "ColorPicker/color-utils.js"
   },
   {
     "name": "ColorPicker",
@@ -62,10 +70,6 @@
   {
     "name": "slider-sizes",
     "path": "ColorPicker/slider-sizes.js"
-  },
-  {
-    "name": "ColorSwatch",
-    "path": "ColorSwatch.js"
   },
   {
     "name": "Column",

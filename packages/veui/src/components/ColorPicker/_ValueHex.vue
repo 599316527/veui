@@ -1,7 +1,7 @@
 <template>
 <div class="veui-color-value-hex">
   <div class="veui-color-value">
-    <veui-input type="text" ref="hexValue" :value="hexValue"
+    <veui-input type="text" ref="hexValue" :value="hexValue" :readonly="readonly"
       @input="handleValueInput"
       @blur="handleValueBlur"
     ></veui-input>
@@ -21,7 +21,11 @@ export default {
   props: {
     hue: Number,
     saturation: Number,
-    brightness: Number
+    brightness: Number,
+    readonly: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {

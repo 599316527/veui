@@ -6,7 +6,7 @@
   ></veui-color-shade-field>
 
   <div class="veui-color-panel-standard-swatch">
-    <veui-color-swatch :color="color" :width="40" :height="40"></veui-color-swatch>
+    <veui-color-swatch :color="color"></veui-color-swatch>
     <div class="veui-color-panel-standard-sliders">
       <veui-color-hue-slider :value="hue" :direction="0"
         @update:value="handleHueValueUpdate"

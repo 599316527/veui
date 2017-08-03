@@ -1,19 +1,19 @@
 <template>
 <div class="veui-color-value-rgb">
   <div class="veui-color-value">
-    <veui-input type="text" ref="redValue" :value="rgb.r"
+    <veui-input type="text" ref="redValue" :value="rgb.r" :readonly="readonly"
       @input="handleRedValueInput"
       @blur="handleValueBlur"
     ></veui-input>
   </div>
   <div class="veui-color-value">
-    <veui-input type="text" ref="greenValue" :value="rgb.g"
+    <veui-input type="text" ref="greenValue" :value="rgb.g" :readonly="readonly"
       @input="handleGreenValueInput"
       @blur="handleValueBlur"
     ></veui-input>
   </div>
   <div class="veui-color-value">
-    <veui-input type="text" ref="blueValue" :value="rgb.b"
+    <veui-input type="text" ref="blueValue" :value="rgb.b" :readonly="readonly"
       @input="handleBlueValueInput"
       @blur="handleValueBlur"
     ></veui-input>
@@ -34,7 +34,11 @@ export default {
   props: {
     hue: Number,
     saturation: Number,
-    brightness: Number
+    brightness: Number,
+    readonly: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {

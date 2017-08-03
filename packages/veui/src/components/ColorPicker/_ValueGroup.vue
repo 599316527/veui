@@ -2,13 +2,21 @@
 <div class="veui-color-value-group">
   <div class="veui-color-value-group-item veui-color-value-group-item-hex">
     <div class="veui-color-value-group-name">Hex</div>
-    <veui-color-value-hex :hue="hue" :saturation="saturation" :brightness="brightness"
+    <veui-color-value-hex
+      :hue="hue"
+      :saturation="saturation"
+      :brightness="brightness"
+      :readonly="readonly"
       @update:hsb="handleHsbValueUpdate"
     ></veui-color-value-hex>
   </div>
   <div class="veui-color-value-group-item veui-color-value-group-item-rgb">
     <div class="veui-color-value-group-name">RGB</div>
-    <veui-color-value-rgb :hue="hue" :saturation="saturation" :brightness="brightness"
+    <veui-color-value-rgb
+      :hue="hue"
+      :saturation="saturation"
+      :brightness="brightness"
+      :readonly="readonly"
       @update:hsb="handleHsbValueUpdate"
     ></veui-color-value-rgb>
   </div>
@@ -28,7 +36,11 @@ export default {
   props: {
     hue: Number,
     saturation: Number,
-    brightness: Number
+    brightness: Number,
+    readonly: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {}

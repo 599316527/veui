@@ -1,5 +1,5 @@
 <template>
-<div class="veui-color-panel-luxuriant">
+<div class="veui-color-panel-large">
 
   <veui-color-shade-field :width="220" :height="220" :hue="hue"
     :saturation="saturation" :brightness="brightness"
@@ -20,9 +20,9 @@
     @dragend="handleDragEnd"
   ></veui-color-hue-slider>
 
-  <div class="veui-color-panel-luxuriant-color-diff">
-    <div class="veui-color-panel-luxuriant-color-diff-text">新的</div>
-    <div class="veui-color-panel-luxuriant-color-diff-color">
+  <div class="veui-color-panel-large-color-diff">
+    <div class="veui-color-panel-large-color-diff-text">新的</div>
+    <div class="veui-color-panel-large-color-diff-color">
       <div :style="{
         'background-color': currentColor
       }"></div>
@@ -30,7 +30,7 @@
         'background-color': previousColor || currentColor
       }"></div>
     </div>
-    <div class="veui-color-panel-luxuriant-color-diff-text">当前</div>
+    <div class="veui-color-panel-large-color-diff-text">当前</div>
   </div>
 
   <veui-color-value-group :hue="hue" :saturation="saturation" :brightness="brightness"
@@ -47,7 +47,7 @@ import ShadeField from './_ShadeField'
 import ValueGroup from './_ValueGroup'
 
 export default {
-  name: 'ColorPanelLuxuriant',
+  name: 'ColorPanelLarge',
   components: {
     'veui-color-hue-slider': HueSlider,
     'veui-color-alpha-slider': AlphaSlider,

@@ -1,17 +1,17 @@
 <template>
 <div class="veui-color-picker" :ui="ui">
   <div class="veui-color-picker-main">
-    <div v-if="ui === 'luxuriant'">
-      <veui-color-panel-luxuriant
+    <div v-if="ui === 'large'">
+      <veui-color-panel-large
         :hue="hsb.h"
         :saturation="hsb.s"
         :brightness="hsb.v"
         :alpha="hsb.a"
         @update:hsb="handleHsbValueUpdate"
         @update:alpha="handleAlphaValueUpdate"
-      ></veui-color-panel-luxuriant>
+      ></veui-color-panel-large>
     </div>
-    <div v-else-if="ui === 'standard'">
+    <div v-else-if="ui === 'normal'">
       <veui-color-panel-standard
         :hue="hsb.h"
         :saturation="hsb.s"
@@ -21,7 +21,7 @@
         @update:alpha="handleAlphaValueUpdate"
       ></veui-color-panel-standard>
     </div>
-    <div v-else-if="ui === 'barren'">
+    <div v-else-if="ui === 'small'">
       <veui-color-value-group
         :hue="hsb.h"
         :saturation="hsb.s"
@@ -42,24 +42,23 @@
 import tinycolor from 'tinycolor2'
 import ColorSwatch from './ColorSwatch'
 import ValueGroup from './_ValueGroup'
-import ColorPanelLuxuriant from './_ColorPanelLuxuriant'
+import ColorPanelLarge from './_ColorPanelLarge'
 import ColorPanelStandard from './_ColorPanelStandard'
-
-const colorValuePrecision = 1e4
+import {formatHsla} from './_color-util'
 
 export default {
   name: 'ColorPicker',
   components: {
     'veui-color-swatch': ColorSwatch,
     'veui-color-panel-standard': ColorPanelStandard,
-    'veui-color-panel-luxuriant': ColorPanelLuxuriant,
+    'veui-color-panel-large': ColorPanelLarge,
     'veui-color-value-group': ValueGroup
   },
   props: {
     color: String,
     ui: {
       type: String,
-      default: 'standard'
+      default: 'normal'
     }
   },
   model: {
@@ -82,7 +81,8 @@ export default {
         hsb.h = prevHsb.h
       }
       if (tinycolor.equals(hsb, prevHsb)) {
-        // 纯黑色情况下，传出再传入的 hsv 不一样，导致信息丢失，这里恢复一下，不然取色圈会跳变
+        // 连续纯黑色情况下(SaturationBrightnessField底部区域)，
+        // 传出再传入的 hsv 不一样，导致信息丢失，这里恢复一下，不然取色圈会跳变
         // hsv(40, 0.001, 0.001) -> rgb(0, 0, 0) -> hsv(0, 0, 0)
         hsb.h = prevHsb.h
         hsb.s = prevHsb.s
@@ -93,15 +93,10 @@ export default {
   },
   methods: {
     updateColor (color) {
-      // console.log(color)
       this.previousHsb = color
-      let {h, s, l, a} = tinycolor(color).toHsl()
-      h = Math.round(h % 360 * colorValuePrecision) / colorValuePrecision
-      s = Math.round(s * 100 * colorValuePrecision) / colorValuePrecision
-      l = Math.round(l * 100 * colorValuePrecision) / colorValuePrecision
-      a = Math.round(a * colorValuePrecision) / colorValuePrecision
-      color = a === 1 ? `hsl(${h}, ${s}%, ${l}%)` : `hsla(${h}, ${s}%, ${l}%, ${a})`
-      this.$emit('update:color', color)
+      // 因为 tinycolor 的 toHslString() 得到的颜色没有小数
+      // 精度丢失会导致数字修改时突变，所以自己实现一个format保留4位小数
+      this.$emit('update:color', formatHsla(tinycolor(color).toHsl()))
     },
     handleAlphaValueUpdate (alpha) {
       this.updateColor(Object.assign({}, this.hsb, {a: alpha}))
