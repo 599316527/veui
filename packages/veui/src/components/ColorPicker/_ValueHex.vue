@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import {hsl2rgb, rgb2hsl, rgb2hex, hex2rgb} from './color-converter'
+import tinycolor from 'tinycolor2'
 import Input from '../Input'
 
 export default {
@@ -21,7 +21,7 @@ export default {
   props: {
     hue: Number,
     saturation: Number,
-    lightness: Number
+    brightness: Number
   },
   data () {
     return {
@@ -30,8 +30,11 @@ export default {
   },
   computed: {
     hexValue () {
-      let rgbValue = hsl2rgb(this.hue, this.saturation, this.lightness)
-      return rgb2hex(...rgbValue)
+      return tinycolor({
+        h: this.hue,
+        s: this.saturation,
+        v: this.brightness
+      }).toHexString()
     }
   },
   methods: {
@@ -39,7 +42,7 @@ export default {
       if (!/^#[0-9A-F]{6}$/i.test(val)) {
         return
       }
-      this.$emit('update:hsl', ...rgb2hsl(...hex2rgb(val)))
+      this.$emit('update:hsb', tinycolor(val).toHsv())
     },
     handleValueBlur () {
       // 如果输入的值不合法就不触发事件，但希望能把输入框里的非法值改成当前的正确值，所以就这个处理下

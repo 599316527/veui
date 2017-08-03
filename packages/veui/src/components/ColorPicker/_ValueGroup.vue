@@ -2,14 +2,14 @@
 <div class="veui-color-value-group">
   <div class="veui-color-value-group-item veui-color-value-group-item-hex">
     <div class="veui-color-value-group-name">Hex</div>
-    <veui-color-value-hex :hue="hue" :saturation="saturation" :lightness="lightness"
-      @update:hsl="handleHslValueUpdate"
+    <veui-color-value-hex :hue="hue" :saturation="saturation" :brightness="brightness"
+      @update:hsb="handleHsbValueUpdate"
     ></veui-color-value-hex>
   </div>
   <div class="veui-color-value-group-item veui-color-value-group-item-rgb">
     <div class="veui-color-value-group-name">RGB</div>
-    <veui-color-value-rgb :hue="hue" :saturation="saturation" :lightness="lightness"
-      @update:hsl="handleHslValueUpdate"
+    <veui-color-value-rgb :hue="hue" :saturation="saturation" :brightness="brightness"
+      @update:hsb="handleHsbValueUpdate"
     ></veui-color-value-rgb>
   </div>
 </div>
@@ -28,15 +28,15 @@ export default {
   props: {
     hue: Number,
     saturation: Number,
-    lightness: Number
+    brightness: Number
   },
   data () {
     return {}
   },
   computed: {},
   methods: {
-    handleHslValueUpdate (...hsl) {
-      this.$emit('update:hsl', ...hsl)
+    handleHsbValueUpdate (hsb) {
+      this.$emit('update:hsb', hsb)
     }
   }
 }

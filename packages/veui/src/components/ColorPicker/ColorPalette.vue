@@ -110,7 +110,6 @@ export default {
 
 function isDragItemOutsideOfField (itemX, itemY, fieldTop, fieldLeft, fieldWidth, fieldHeight) {
   let aroundWidth = 30
-  console.log(arguments)
   return itemX < fieldLeft - aroundWidth || itemX > fieldLeft + fieldWidth + aroundWidth ||
     itemY < fieldTop - aroundWidth || itemY > fieldTop + fieldHeight + aroundWidth
 }

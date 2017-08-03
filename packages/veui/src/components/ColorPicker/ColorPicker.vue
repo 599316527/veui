@@ -3,30 +3,31 @@
   <div class="veui-color-picker-main">
     <div v-if="ui === 'luxuriant'">
       <veui-color-panel-luxuriant
-        :hue="parsedColor.hue"
-        :saturation="parsedColor.saturation"
-        :lightness="parsedColor.lightness"
-        :alpha="parsedColor.alpha"
-        @update:hsl="handleHslValueUpdate"
+        :hue="hsb.h"
+        :saturation="hsb.s"
+        :brightness="hsb.v"
+        :alpha="hsb.a"
+        @update:hsb="handleHsbValueUpdate"
         @update:alpha="handleAlphaValueUpdate"
       ></veui-color-panel-luxuriant>
     </div>
     <div v-else-if="ui === 'standard'">
       <veui-color-panel-standard
-        :hue="parsedColor.hue"
-        :saturation="parsedColor.saturation"
-        :lightness="parsedColor.lightness"
-        :alpha="parsedColor.alpha"
-        @update:hsl="handleHslValueUpdate"
+        :hue="hsb.h"
+        :saturation="hsb.s"
+        :brightness="hsb.v"
+        :alpha="hsb.a"
+        @update:hsb="handleHsbValueUpdate"
         @update:alpha="handleAlphaValueUpdate"
       ></veui-color-panel-standard>
     </div>
     <div v-else-if="ui === 'barren'">
       <veui-color-value-group
-        :hue="parsedColor.hue"
-        :saturation="parsedColor.saturation"
-        :lightness="parsedColor.lightness"
-        @update:hsl="handleHslValueUpdate"
+        :hue="hsb.h"
+        :saturation="hsb.s"
+        :brightness="hsb.v"
+        :alpha="hsb.a"
+        @update:hsb="handleHsbValueUpdate"
       ></veui-color-value-group>
     </div>
     <div v-else>Oops!</div>
@@ -38,7 +39,7 @@
 </template>
 
 <script>
-import {color2hsla, hsla2color} from './color-converter'
+import tinycolor from 'tinycolor2'
 import ColorSwatch from './ColorSwatch'
 import ValueGroup from './_ValueGroup'
 import ColorPanelLuxuriant from './_ColorPanelLuxuriant'
@@ -67,19 +68,19 @@ export default {
     return {}
   },
   computed: {
-    parsedColor () {
-      return color2hsla(this.color)
+    hsb () {
+      return tinycolor(this.color).toHsv()
     }
   },
   methods: {
-    updateColor ({hue, saturation, lightness, alpha}) {
-      this.$emit('update:color', hsla2color(hue, saturation, lightness, alpha))
+    updateColor (color) {
+      this.$emit('update:color', tinycolor(color).toHslString())
     },
     handleAlphaValueUpdate (alpha) {
-      this.updateColor(Object.assign({}, this.parsedColor, {alpha}))
+      this.updateColor(Object.assign({}, this.hsb, {a: alpha}))
     },
-    handleHslValueUpdate (hue, saturation, lightness) {
-      this.updateColor(Object.assign({}, this.parsedColor, {hue, saturation, lightness}))
+    handleHsbValueUpdate (hsb) {
+      this.updateColor(Object.assign({}, this.hsb, hsb))
     }
   }
 }

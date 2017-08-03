@@ -3,8 +3,8 @@
   <div class="veui-color-value-alpha-group-values">
     <div class="veui-color-value-alpha-group-color">
       <component :is="'veui-color-value-' + variant"
-        :hue="hue" :saturation="saturation" :lightness="lightness"
-        @update:hsl="handleHslValueUpdate"
+        :hue="hue" :saturation="saturation" :brightness="brightness"
+        @update:hsb="handleHsbValueUpdate"
       ></component>
     </div>
     <div class="veui-color-value-alpha-group-separator" @click="toggleColorFormatVariant"></div>
@@ -50,7 +50,7 @@ export default {
   props: {
     hue: Number,
     saturation: Number,
-    lightness: Number,
+    brightness: Number,
     alpha: Number
   },
   data () {
@@ -62,8 +62,8 @@ export default {
 
   },
   methods: {
-    handleHslValueUpdate (...hsl) {
-      this.$emit('update:hsl', ...hsl)
+    handleHsbValueUpdate (hsb) {
+      this.$emit('update:hsb', hsb)
     },
     handleAlphaValueUpdate (val) {
       this.$emit('update:alpha', val)

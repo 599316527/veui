@@ -2,8 +2,8 @@
 <div class="veui-color-panel-luxuriant">
 
   <veui-color-shade-field :width="220" :height="220" :hue="hue"
-    :saturation="saturation" :lightness="lightness"
-    @update:satlig="handleSatligValueUpdate"
+    :saturation="saturation" :brightness="brightness"
+    @update:satbri="handleSatbriValueUpdate"
   ></veui-color-shade-field>
 
   <veui-color-alpha-slider :value="alpha" :direction="1"
@@ -18,7 +18,7 @@
     <div class="veui-color-panel-luxuriant-color-diff-text">新的</div>
     <div class="veui-color-panel-luxuriant-color-diff-color">
       <div :style="{
-        'background-color': `hsla(${hue}, ${saturation * 100}%, ${lightness * 100}%, ${alpha})`
+        'background-color': currentColor
       }"></div>
       <div :style="{
         'background-color': `yellow`
@@ -27,13 +27,14 @@
     <div class="veui-color-panel-luxuriant-color-diff-text">当前</div>
   </div>
 
-  <veui-color-value-group :hue="hue" :saturation="saturation" :lightness="lightness"
-    @update:hsl="handleHslValueUpdate"
+  <veui-color-value-group :hue="hue" :saturation="saturation" :brightness="brightness"
+    @update:hsb="handleHsbValueUpdate"
   ></veui-color-value-group>
 </div>
 </template>
 
 <script>
+import tinycolor from 'tinycolor2'
 import HueSlider from './_HueSlider'
 import AlphaSlider from './_AlphaSlider'
 import ShadeField from './_ShadeField'
@@ -50,7 +51,7 @@ export default {
   props: {
     hue: Number,
     saturation: Number,
-    lightness: Number,
+    brightness: Number,
     alpha: Number
   },
   data () {
@@ -59,20 +60,35 @@ export default {
     }
   },
   computed: {
-
+    currentColor () {
+      return tinycolor({
+        h: this.hue,
+        s: this.saturation,
+        v: this.brightness,
+        a: this.alpha
+      }).toHslString()
+    }
   },
   methods: {
-    handleHueValueUpdate (hue) {
-      this.$emit('update:hsl', hue, this.saturation, this.lightness)
+    handleHueValueUpdate (h) {
+      this.$emit('update:hsb', {
+        h,
+        s: this.saturation,
+        v: this.brightness
+      })
     },
     handleAlphaValueUpdate (val) {
       this.$emit('update:alpha', val)
     },
-    handleHslValueUpdate (...hsl) {
-      this.$emit('update:hsl', ...hsl)
+    handleHsbValueUpdate (hsb) {
+      this.$emit('update:hsb', hsb)
     },
-    handleSatligValueUpdate (...sl) {
-      this.$emit('update:hsl', this.hue, ...sl)
+    handleSatbriValueUpdate (s, v) {
+      this.$emit('update:hsb', {
+        h: this.hue,
+        s,
+        v
+      })
     }
   }
 }

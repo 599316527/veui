@@ -12,9 +12,10 @@
 
 <script>
 import Input from '../Input'
+import {clamp} from 'lodash'
 
 export default {
-  name: 'ColorValueHex',
+  name: 'ColorValueAlpha',
   components: {
     'veui-input': Input
   },
@@ -40,8 +41,7 @@ export default {
       if (!this.matchRegexp.test(val)) {
         return
       }
-      val = parseFloat(val) / 100 || 1
-      val = Math.min(1, Math.max(0, val))
+      val = clamp(parseFloat(val) / 100 || 1, 0, 1)
       this.$emit('update:alpha', val)
     },
     handleValueBlur () {

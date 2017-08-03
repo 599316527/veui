@@ -13,25 +13,25 @@
   </div>
   <div class="veui-color-swatch-color" v-if="ui">
     <component :is="'veui-color-value-' + ui"
-      :hue="parsedColor.hue"
-      :saturation="parsedColor.saturation"
-      :lightness="parsedColor.lightness"
+      :hue="hsb.h"
+      :saturation="hsb.s"
+      :brightness="hsb.v"
     ></component>
   </div>
   <div class="veui-color-swatch-alpha" v-if="ui">
     <div>透明度</div>
-    <veui-color-value-alpha :value="parsedColor.alpha"></veui-color-value-alpha>
+    <veui-color-value-alpha :value="hsb.a"></veui-color-value-alpha>
     <div>%</div>
   </div>
 </div>
 </template>
 
 <script>
+import tinycolor from 'tinycolor2'
 import ValueHsl from './_ValueHsl'
 import ValueRgb from './_ValueRgb'
 import ValueHex from './_ValueHex'
 import ValueAlpha from './_ValueAlpha'
-import {color2hsla} from './color-converter'
 
 export default {
   name: 'color-swatch',
@@ -62,8 +62,8 @@ export default {
     }
   },
   computed: {
-    parsedColor () {
-      let colors = color2hsla(this.color)
+    hsb () {
+      let colors = tinycolor(this.color).toHsv()
       return Object.keys(colors).reduce(function (obj, key) {
         obj[key] = Math.round(colors[key] * 100) / 100
         return obj

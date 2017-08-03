@@ -1,19 +1,19 @@
 <template>
 <div class="veui-color-value-hsl">
   <div class="veui-color-value">
-    <veui-input type="text" ref="hueValue" :value="hue"
+    <veui-input type="text" ref="hueValue" :value="hsl.h"
       @input="handleHueValueInput"
       @blur="handleValueBlur"
     ></veui-input>
   </div>
   <div class="veui-color-value">
-    <veui-input type="text" ref="saturationValue" :value="saturation"
+    <veui-input type="text" ref="saturationValue" :value="hsl.s"
       @input="handleSaturationValueInput"
       @blur="handleValueBlur"
     ></veui-input>
   </div>
   <div class="veui-color-value">
-    <veui-input type="text" ref="lightnessValue" :value="lightness"
+    <veui-input type="text" ref="lightnessValue" :value="hsl.l"
       @input="handleLightnessValueInput"
       @blur="handleValueBlur"
     ></veui-input>
@@ -23,6 +23,8 @@
 
 <script>
 import Input from '../Input'
+import tinycolor from 'tinycolor2'
+import {clamp} from 'lodash'
 
 export default {
   name: 'ColorValueHsl',
@@ -32,43 +34,64 @@ export default {
   props: {
     hue: Number,
     saturation: Number,
-    lightness: Number
+    brightness: Number
   },
   data () {
     return {
 
     }
   },
-  computed: {},
+  computed: {
+    hsl () {
+      let hsl = tinycolor({
+        h: this.hue,
+        s: this.saturation,
+        v: this.brightness
+      }).toHsl()
+      hsl.h = Math.round(hsl.h * 100) / 100
+      hsl.s = Math.round(hsl.s * 100) + '%'
+      hsl.l = Math.round(hsl.l * 100) + '%'
+      return hsl
+    }
+  },
   methods: {
     handleHueValueInput (val) {
-      val = parseInt(val, 10)
-      val = Math.min(359, Math.max(0, val % 360))
+      val = clamp(parseFloat(val) % 360, 0, 360)
       if (isNaN(val)) {
         return
       }
-      this.$emit('update:hsl', val, this.saturation, this.lightness)
+      this.$emit('update:hsb', {
+        h: val,
+        s: this.saturation,
+        v: this.brightness
+      })
     },
     handleSaturationValueInput (val) {
-      val = parseFloat(val, 10)
-      val = Math.min(1, Math.max(0, val))
+      val = clamp(parseFloat(val) / 100, 0, 1)
       if (isNaN(val)) {
         return
       }
-      this.$emit('update:hsl', this.hue, val, this.lightness)
+      this.$emit('update:hsb', {
+        h: this.hue,
+        s: val,
+        v: this.brightness
+      })
     },
     handleLightnessValueInput (val) {
-      val = parseFloat(val, 10)
-      val = Math.min(1, Math.max(0, val))
+      val = clamp(parseFloat(val) / 100, 0, 1)
       if (isNaN(val)) {
         return
       }
-      this.$emit('update:hsl', this.hue, this.saturation, val)
+      this.$emit('update:hsb', tinycolor({
+        h: this.hue,
+        s: this.saturation,
+        l: val
+      }).toHsv())
     },
     handleValueBlur () {
-      this.$refs.hueValue.$refs.input.value = this.hue
-      this.$refs.saturationValue.$refs.input.value = this.saturation
-      this.$refs.lightnessValue.$refs.input.value = this.lightness
+      this.$refs.hueValue.$refs.input.value = this.hsl.h
+      this.$refs.saturationValue.$refs.input.value = this.hsl.s
+      this.$refs.lightnessValue.$refs.input.value = this.hsl.l
     }
   }
 }

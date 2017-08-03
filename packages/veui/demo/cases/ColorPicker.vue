@@ -10,10 +10,15 @@
     </section>
 
     <h2>取色器</h2>
+    <p>
+      <label style="float: right">
+        <input type="checkbox" v-model="showPalette" /> 带调色板？
+      </label>
+    </p>
     <section class="color-pickers">
       <veui-color-picker v-model="color" ui="barren">
         <!-- 色板作为 slot 传入 -->
-        <veui-color-palette :colors="colors"
+        <veui-color-palette :colors="colors" v-if="showPalette"
           @select="handlePaletteColorSelect"
           @remove="handlePaletteColorRemove"
           @add="handlePaletteColorAdd"
@@ -22,11 +27,17 @@
     </section>
     <section class="color-pickers">
       <!-- v-model="color" OR :color.sync OR @update:color="val => color = val" -->
-      <veui-color-picker v-model="color" ui="luxuriant"></veui-color-picker>
+      <veui-color-picker v-model="color" ui="luxuriant">
+        <veui-color-palette :colors="colors" v-if="showPalette"
+          @select="handlePaletteColorSelect"
+          @remove="handlePaletteColorRemove"
+          @add="handlePaletteColorAdd"
+        ></veui-color-palette>
+      </veui-color-picker>
     </section>
     <section class="color-pickers">
       <veui-color-picker v-model="color">
-        <veui-color-palette :colors="colors" ui="slim"
+        <veui-color-palette :colors="colors" ui="slim" v-if="showPalette"
           @select="handlePaletteColorSelect"
           @remove="handlePaletteColorRemove"
           @add="handlePaletteColorAdd"
@@ -44,12 +55,13 @@ import { ColorSwatch, ColorPicker, ColorPalette } from 'veui'
 export default {
   name: 'color-picker-demo',
   components: {
-    'veui-color-palette': ColorPalette,
     'veui-color-swatch': ColorSwatch,
-    'veui-color-picker': ColorPicker
+    'veui-color-picker': ColorPicker,
+    'veui-color-palette': ColorPalette
   },
   data () {
     return {
+      showPalette: true,
       color: 'hsla(123, 54%, 43%, 0.9)',
       colors: [
         '#D0021B',
