@@ -47,14 +47,6 @@ export default {
     event: 'update:color'
   },
   props: {
-    width: {
-      type: Number,
-      default: 36
-    },
-    height: {
-      type: Number,
-      default: 36
-    },
     color: {
       type: String,
       default: '#fff'

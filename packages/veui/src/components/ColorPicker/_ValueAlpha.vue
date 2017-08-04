@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     handleValueInput (val) {
-      console.log(val)
+      // console.log(val)
       if (!this.matchRegexp.test(val)) {
         return
       }

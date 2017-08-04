@@ -56,6 +56,10 @@ export default {
   },
   props: {
     color: String,
+    format: {
+      type: String,
+      default: 'hsl'
+    },
     ui: {
       type: String,
       default: 'normal'
@@ -92,11 +96,22 @@ export default {
     }
   },
   methods: {
+    formatColor (color) {
+      color = tinycolor(color)
+      switch (this.format) {
+        case 'rgb':
+          return color.toRgbString()
+        case 'hex':
+          return color.toHexString()
+        case 'hsl':
+          // 因为 tinycolor 的 toHslString() 得到的颜色没有小数
+          // 精度丢失会导致数字修改时突变，所以自己实现一个format保留4位小数
+          return formatHsla(color.toHsl())
+      }
+    },
     updateColor (color) {
       this.previousHsb = color
-      // 因为 tinycolor 的 toHslString() 得到的颜色没有小数
-      // 精度丢失会导致数字修改时突变，所以自己实现一个format保留4位小数
-      this.$emit('update:color', formatHsla(tinycolor(color).toHsl()))
+      this.$emit('update:color', this.formatColor(color))
     },
     handleAlphaValueUpdate (alpha) {
       this.updateColor(Object.assign({}, this.hsb, {a: alpha}))
