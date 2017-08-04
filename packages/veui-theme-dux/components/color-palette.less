@@ -2,7 +2,7 @@
 
 .veui-color-palette {
   padding: 10px 15px;
-  border-top: 1px solid #E7E7E7;
+  border-top: 1px solid @veui-gray-color-sup-2;
 
   &-colors {
     .clearfix();
@@ -11,9 +11,9 @@
   &-color {
     float: left;
     margin: 5px;
-    width: 24px;
-    height: 24px;
-    border: 1px solid rgba(51, 51, 51, 0.2);
+    width: @veui-height-tiny;
+    height: @veui-height-tiny;
+    border: 1px solid fade(@veui-gray-color-strong, 20%);
     border-radius: 4px;
 
     div {
@@ -21,17 +21,17 @@
       height: 100%;
     }
 
-    > div {
+    & > div {
       .veui-transparency-grid-background();
     }
 
     // add button
-    line-height: 24px;
+    line-height: @veui-height-tiny;
     text-align: center;
-    background: #F1F1F1;
+    background: @veui-gray-color-sup-3;
 
     path {
-      fill: #DBDBDB;
+      fill: @veui-gray-color-sup-1;
     }
 
     &-outside {

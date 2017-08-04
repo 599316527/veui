@@ -16,11 +16,11 @@
       </div>
       <div class="color-swatche">
         <div class="tip">HEX</div>
-        <veui-color-swatch v-model="color" ui="small hex alpha"></veui-color-swatch>
+        <veui-color-swatch v-model="color" ui="hex small alpha"></veui-color-swatch>
       </div>
       <div class="color-swatche">
         <div class="tip">HSL</div>
-        <veui-color-swatch :color.sync="color" ui="normal hsl alpha"></veui-color-swatch>
+        <veui-color-swatch :color.sync="color" ui="alpha normal hsl"></veui-color-swatch>
       </div>
       <div class="color-swatche">
         <div class="tip">RGB <small>不能修改</small></div>

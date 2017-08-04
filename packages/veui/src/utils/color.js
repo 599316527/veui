@@ -1,9 +1,4 @@
 /**
- * @file 颜色相关工具
- * @author Kyle He (me@kylehe.me)
- */
-
-/**
  * 格式化 hsla
  *
  * @param  {Number} color.h         Hue

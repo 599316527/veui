@@ -23,14 +23,14 @@
     left: 0;
     width: 12px;
     height: 12px;
-    border: 2px solid #FCFCFC;
+    border: 2px solid @veui-gray-color-sup-5;
     border-radius: 100%;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .5);
+    box-shadow: 0 2px 4px 0 fade(#000, 50%);
   }
 }
 
 .veui-color-value {
-  height: 30px;
+  height: @veui-height-small;
 
   input {
     width: 100%;
@@ -75,8 +75,8 @@
   .clearfix();
 
   &-name {
-    font-size: 14px;
-    line-height: 30px;
+    font-size: @veui-font-size-normal;
+    line-height: 2;
     margin-right: 5px;
   }
 
@@ -120,8 +120,8 @@
 
   &-text {
     .clearfix();
-    color: #666;
-    font-size: 12px;
+    color: @veui-gray-color-normal;
+    font-size: @veui-font-size-small;
     margin-top: 5px;
     text-align: center;
     &-hsl,
@@ -140,32 +140,53 @@
       width: 140px;
     }
     &-alpha {
-      width: 46px;
       float: right;
+      width: 46px;
     }
   }
 
   &-separator {
     float: left;
     width: 14px;
-    height: 30px;
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='20'><circle cx='2' cy='2' r='2' fill='#D8D8D8'/><circle cx='2' cy='10' r='2' fill='#666666'/><circle cx='2' cy='18' r='2' fill='#D8D8D8'/></svg>") no-repeat center / 4px auto;
-  }
+    padding: 1px;
+    height: @veui-height-small;
 
-  &[ui=hex] {
-    .veui-color-value-alpha-group-separator {
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='20'><circle cx='2' cy='2' r='2' fill='#666666'/><circle cx='2' cy='10' r='2' fill='#D8D8D8'/><circle cx='2' cy='18' r='2' fill='#D8D8D8'/></svg>");
+    &-dot {
+      margin: 4px;
+      width: 4px;
+      height: 4px;
+      border-radius: 100%;
+      background-color: @veui-gray-color-sup-1;
     }
   }
-  &[ui=hsl] {
-    .veui-color-value-alpha-group-separator {
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='20'><circle cx='2' cy='2' r='2' fill='#D8D8D8'/><circle cx='2' cy='10' r='2' fill='#D8D8D8'/><circle cx='2' cy='18' r='2' fill='#666666'/></svg>");
+
+  &[ui~=hex] {
+    .veui-color-value-alpha-group-separator-dot {
+      &:nth-child(1) {
+        background-color: @veui-gray-color-normal
+      }
+    }
+  }
+  &[ui~=rgb] {
+    .veui-color-value-alpha-group-separator-dot {
+      &:nth-child(2) {
+        background-color: @veui-gray-color-normal
+      }
+    }
+  }
+  &[ui~=hsl] {
+    .veui-color-value-alpha-group-separator-dot {
+      &:nth-child(3) {
+        background-color: @veui-gray-color-normal
+      }
     }
   }
 }
 
 .veui-color-panel-large {
-  width: 300px;
+  @width: 300px;
+
+  width: @width;
   position: relative;
 
   .veui-color-shade-field {
@@ -183,10 +204,12 @@
   }
 
   &-color-diff {
-    margin: 14px 0;
-    height: 24px;
-    font-size: 14px;
-    line-height: 24px;
+    @textWidth: 40px;
+
+    margin: @veui-font-size-normal 0;
+    height: @veui-height-tiny;
+    font-size: @veui-font-size-normal;
+    line-height: @veui-height-tiny;
 
     div {
       height: 100%;
@@ -194,7 +217,7 @@
     }
 
     &-text {
-      width: 40px;
+      width: @textWidth;
 
       &:last-child {
         text-align: right;
@@ -202,7 +225,7 @@
     }
 
     &-color {
-      width: 220px;
+      width: @width - @textWidth * 2;
       .veui-transparency-grid-background();
 
       div {
@@ -234,8 +257,8 @@
 .veui-color-picker {
   width: 340px;
   color: #333;
-  border: 1px solid #DBDBDB;
-  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid @veui-gray-color-sup-1;
+  box-shadow: 0 1px 5px 0 fade(#000, 20%);
   border-radius: 2px;
 
   &-main {

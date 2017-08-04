@@ -32,7 +32,11 @@ import ValueHsl from './_ValueHsl'
 import ValueRgb from './_ValueRgb'
 import ValueHex from './_ValueHex'
 import ValueAlpha from './_ValueAlpha'
-import {formatHsla} from './_color-util'
+import {formatHsla} from '../../utils/color'
+import ui from '../../mixins/ui'
+
+const swatchSizes = ['small', 'normal']
+const formatVariants = ['hex', 'rgb', 'hsl']
 
 export default {
   name: 'color-swatch',
@@ -46,6 +50,9 @@ export default {
     prop: 'color',
     event: 'update:color'
   },
+  mixins: [
+    ui
+  ],
   props: {
     color: {
       type: String,
@@ -74,17 +81,18 @@ export default {
         return obj
       }, {})
     },
-    realUi () {
-      return this.ui.split(' ')
-    },
     swatchSize () {
-      return this.readUi[0]
+      return this.uiProps.filter(function (ui) {
+        return swatchSizes.includes(ui)
+      })[0]
     },
     colorFormatVariant () {
-      return this.realUi[1]
+      return this.uiProps.filter(function (ui) {
+        return formatVariants.includes(ui)
+      })[0]
     },
     hasAlphaValue () {
-      return this.realUi[2]
+      return this.uiProps.includes('alpha')
     }
   },
   methods: {

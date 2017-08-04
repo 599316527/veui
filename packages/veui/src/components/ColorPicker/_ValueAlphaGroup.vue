@@ -7,7 +7,11 @@
         @update:hsb="handleHsbValueUpdate"
       ></component>
     </div>
-    <div class="veui-color-value-alpha-group-separator" @click="toggleColorFormatVariant"></div>
+    <div class="veui-color-value-alpha-group-separator" @click="toggleColorFormatVariant">
+      <div class="veui-color-value-alpha-group-separator-dot"></div>
+      <div class="veui-color-value-alpha-group-separator-dot"></div>
+      <div class="veui-color-value-alpha-group-separator-dot"></div>
+    </div>
     <div class="veui-color-value-alpha-group-alpha">
       <veui-color-value-alpha :value="alpha" :percentage="true" :readonly="readonly"
         @update:alpha="handleAlphaValueUpdate"

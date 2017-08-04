@@ -1,7 +1,7 @@
 <template>
 <div class="veui-color-picker" :ui="ui">
   <div class="veui-color-picker-main">
-    <div v-if="ui === 'large'">
+    <div v-if="uiProps.includes('large')">
       <veui-color-panel-large
         :hue="hsb.h"
         :saturation="hsb.s"
@@ -11,7 +11,16 @@
         @update:alpha="handleAlphaValueUpdate"
       ></veui-color-panel-large>
     </div>
-    <div v-else-if="ui === 'normal'">
+    <div v-else-if="uiProps.includes('small')">
+      <veui-color-value-group
+        :hue="hsb.h"
+        :saturation="hsb.s"
+        :brightness="hsb.v"
+        :alpha="hsb.a"
+        @update:hsb="handleHsbValueUpdate"
+      ></veui-color-value-group>
+    </div>
+    <div v-else>
       <veui-color-panel-standard
         :hue="hsb.h"
         :saturation="hsb.s"
@@ -21,16 +30,6 @@
         @update:alpha="handleAlphaValueUpdate"
       ></veui-color-panel-standard>
     </div>
-    <div v-else-if="ui === 'small'">
-      <veui-color-value-group
-        :hue="hsb.h"
-        :saturation="hsb.s"
-        :brightness="hsb.v"
-        :alpha="hsb.a"
-        @update:hsb="handleHsbValueUpdate"
-      ></veui-color-value-group>
-    </div>
-    <div v-else>Oops!</div>
   </div>
   <div class="veui-color-picker-extra">
     <slot></slot>
@@ -44,7 +43,8 @@ import ColorSwatch from './ColorSwatch'
 import ValueGroup from './_ValueGroup'
 import ColorPanelLarge from './_ColorPanelLarge'
 import ColorPanelStandard from './_ColorPanelStandard'
-import {formatHsla} from './_color-util'
+import {formatHsla} from '../../utils/color'
+import ui from '../../mixins/ui'
 
 export default {
   name: 'ColorPicker',
@@ -54,6 +54,9 @@ export default {
     'veui-color-panel-large': ColorPanelLarge,
     'veui-color-value-group': ValueGroup
   },
+  mixins: [
+    ui
+  ],
   props: {
     color: String,
     format: {
