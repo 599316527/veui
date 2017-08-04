@@ -1,18 +1,15 @@
 <template>
 <div class="veui-color-palette" :ui="ui">
   <div class="veui-color-palette-colors" ref="colors">
-    <div class="veui-color-palette-color" v-for="(color, i) in colors" :key="i" v-drag
-      :class="{
+    <div class="veui-color-palette-color" v-for="(color, i) in colors" :key="i" v-drag :class="{
         'veui-color-palette-color-outside': i === dragItem.index && dragItem.outside
-      }"
-      :style="{
+      }" :style="{
         transform: i === dragItem.index
           ? `translate(${dragItem.distanceX}px, ${dragItem.distanceY}px)`
           : ''
-      }"
-      @click="handleColorClick(i)">
+      }" :data-index="i" @click="handleColorClick(i)">
       <div>
-        <div :data-index="i" :style="{
+        <div :style="{
           'background-color': color
         }"></div>
       </div>
@@ -30,6 +27,8 @@
 <script>
 import Icon from '../Icon'
 import { drag } from '../../directives'
+
+const putbackClass = 'veui-color-palette-color-putback'
 
 export default {
   name: 'ColorPalette',
@@ -81,8 +80,9 @@ export default {
     }
   },
   mounted () {
-    this.$on('dragstart', ({event: {target}}) => {
+    this.$on('dragstart', ({event: {currentTarget: target}}) => {
       this.mouseupMark = 0
+      target.classList.remove(putbackClass)
 
       let {top: targetTop, left: targetLeft} = target.getBoundingClientRect()
       this.dragItem.top = targetTop
@@ -98,12 +98,16 @@ export default {
 
       this.dragItem.outside = false
       this.dragItem.index = parseInt(target.dataset.index, 10)
+      this.dragItemNode = target
     })
     this.$on('dragend', ({event}) => {
       let removeIndex = this.dragItem.index
       this.dragItem.index = -1
       if (this.dragItem.outside) {
         this.$emit('remove', removeIndex)
+      } else if (this.dragItem.distanceX || this.dragItem.distanceY) {
+        this.dragItemNode.classList.add(putbackClass)
+        this.dragItemNode = null
       }
     })
     this.$on('drag', ({distanceX, distanceY}) => {

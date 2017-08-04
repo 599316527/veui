@@ -91,6 +91,9 @@ export default {
         hsb.h = prevHsb.h
         hsb.s = prevHsb.s
       }
+      if (hsb.s === 0 && prevHsb.s !== 0) {
+        hsb.h = prevHsb.h
+      }
 
       return hsb
     }
