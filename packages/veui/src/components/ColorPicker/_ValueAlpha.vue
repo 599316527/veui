@@ -13,34 +13,21 @@
 </template>
 
 <script>
-import Input from '../Input'
 import {clamp} from 'lodash'
-import { numeric } from '../../directives'
+import ColorValueInput from './mixins/_ColorValueInput'
 
 export default {
   name: 'ColorValueAlpha',
-  components: {
-    'veui-input': Input
-  },
-  directives: {
-    numeric
-  },
+  mixins: [
+    ColorValueInput
+  ],
   props: {
-    value: Number,
-    percentage: Boolean,
-    readonly: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-
-    }
+    alpha: Number,
+    percentage: Boolean
   },
   computed: {
     alphaPercentage () {
-      return Math.round(this.value * 100) + (this.percentage ? '%' : '')
+      return Math.round(this.alpha * 100) + (this.percentage ? '%' : '')
     },
     matchRegexp () {
       return this.percentage ? /^\d+(\.\d+)?%$/ : /^\d+(\.\d+)?$/
@@ -52,8 +39,7 @@ export default {
       if (!this.matchRegexp.test(val)) {
         return
       }
-      val = clamp(parseFloat(val) / 100 || 1, 0, 1)
-      this.$emit('update:alpha', val)
+      this.updateAlphaValue(clamp(parseFloat(val) / 100 || 1, 0, 1))
     },
     handleValueBlur () {
       // 如果输入的值不合法就不触发事件，但希望能把输入框里的非法值改成当前的正确值，所以就这个处理下

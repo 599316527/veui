@@ -3,31 +3,26 @@
   <div class="veui-color-picker-main">
     <div v-if="uiProps.includes('large')">
       <veui-color-panel-large
-        :hue="hsb.h"
-        :saturation="hsb.s"
-        :brightness="hsb.v"
-        :alpha="hsb.a"
-        @update:hsb="handleHsbValueUpdate"
-        @update:alpha="handleAlphaValueUpdate"
+        :hue="hsva.h"
+        :saturation="hsva.s"
+        :brightness="hsva.v"
+        :alpha="hsva.a"
       ></veui-color-panel-large>
     </div>
     <div v-else-if="uiProps.includes('small')">
       <veui-color-value-group
-        :hue="hsb.h"
-        :saturation="hsb.s"
-        :brightness="hsb.v"
-        :alpha="hsb.a"
-        @update:hsb="handleHsbValueUpdate"
+        :hue="hsva.h"
+        :saturation="hsva.s"
+        :brightness="hsva.v"
+        :alpha="hsva.a"
       ></veui-color-value-group>
     </div>
     <div v-else>
       <veui-color-panel-standard
-        :hue="hsb.h"
-        :saturation="hsb.s"
-        :brightness="hsb.v"
-        :alpha="hsb.a"
-        @update:hsb="handleHsbValueUpdate"
-        @update:alpha="handleAlphaValueUpdate"
+        :hue="hsva.h"
+        :saturation="hsva.s"
+        :brightness="hsva.v"
+        :alpha="hsva.a"
       ></veui-color-panel-standard>
     </div>
   </div>
@@ -43,8 +38,8 @@ import ColorSwatch from './ColorSwatch'
 import ValueGroup from './_ValueGroup'
 import ColorPanelLarge from './_ColorPanelLarge'
 import ColorPanelStandard from './_ColorPanelStandard'
-import {formatHsla} from '../../utils/color'
 import ui from '../../mixins/ui'
+import ColorHomer from './mixins/_ColorHomer'
 
 export default {
   name: 'ColorPicker',
@@ -55,75 +50,39 @@ export default {
     'veui-color-value-group': ValueGroup
   },
   mixins: [
-    ui
+    ui,
+    ColorHomer
   ],
-  props: {
-    color: String,
-    format: {
-      type: String,
-      default: 'hsl'
-    },
-    ui: {
-      type: String,
-      default: 'normal'
-    }
-  },
-  model: {
-    prop: 'color',
-    event: 'update:color'
-  },
   data () {
     return {
-      previousHsb: {}
+      previousHsva: {}
     }
   },
   computed: {
-    hsb () {
-      let prevHsb = this.previousHsb
-      let hsb = tinycolor(this.color).toHsv()
+    hsva () {
+      let prevHsva = this.previousHsva
+      let hsva = tinycolor(this.color).toHsv()
 
       // fix
-      if (prevHsb.h % 360 === hsb.h % 360) {
+      if (prevHsva.h % 360 === hsva.h % 360) {
         // 因为色相是 360度循环的，360 被 tinycolor 转换成了 0，直接用的话会导致滑块跳变，所以这个特殊处理下
-        hsb.h = prevHsb.h
+        hsva.h = prevHsva.h
       }
-      if (tinycolor.equals(hsb, prevHsb)) {
+      if (tinycolor.equals(hsva, prevHsva)) {
         // 连续纯黑色情况下(SaturationBrightnessField底部区域)，
         // 传出再传入的 hsv 不一样，导致信息丢失，这里恢复一下，不然取色圈会跳变
         // hsv(40, 0.001, 0.001) -> rgb(0, 0, 0) -> hsv(0, 0, 0)
-        hsb.h = prevHsb.h
-        hsb.s = prevHsb.s
+        hsva.h = prevHsva.h
+        hsva.s = prevHsva.s
       }
-      if (hsb.s === 0 && prevHsb.s !== 0) {
-        hsb.h = prevHsb.h
+      if (hsva.s === 0 && prevHsva.s !== 0) {
+        hsva.h = prevHsva.h
+      }
+      if (hsva.h === undefined) {
+        hsva.h = prevHsva.h
       }
 
-      return hsb
-    }
-  },
-  methods: {
-    formatColor (color) {
-      color = tinycolor(color)
-      switch (this.format) {
-        case 'rgb':
-          return color.toRgbString()
-        case 'hex':
-          return color.toHexString()
-        case 'hsl':
-          // 因为 tinycolor 的 toHslString() 得到的颜色没有小数
-          // 精度丢失会导致数字修改时突变，所以自己实现一个format保留4位小数
-          return formatHsla(color.toHsl())
-      }
-    },
-    updateColor (color) {
-      this.previousHsb = color
-      this.$emit('update:color', this.formatColor(color))
-    },
-    handleAlphaValueUpdate (alpha) {
-      this.updateColor(Object.assign({}, this.hsb, {a: alpha}))
-    },
-    handleHsbValueUpdate (hsb) {
-      this.updateColor(Object.assign({}, this.hsb, hsb))
+      return hsva
     }
   }
 }

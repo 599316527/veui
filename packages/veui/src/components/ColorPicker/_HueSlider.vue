@@ -14,35 +14,26 @@
 </template>
 
 <script>
-import {horizonalSliderSize, verticalSliderSize} from './_slider-sizes'
-import Slider from './Slider'
+import ColorSlider from './mixins/_ColorSlider'
 
 export default {
   name: 'ColorHueSlider',
-  components: {
-    'veui-slider': Slider
-  },
-  props: {
-    value: Number,
-    direction: Number
-  },
-  data () {
-    return {}
-  },
+  mixins: [
+    ColorSlider
+  ],
   computed: {
     progress () {
       let val = Math.min(1, Math.max(0, this.value / 360))
       // 水平方向上色相是 360 -> 0，垂直方向上是 0 -> 360，所以要区别处理
       return this.direction === 0 ? 1 - val : val
-    },
-    sliderSize () {
-      return this.direction === 0 ? horizonalSliderSize : verticalSliderSize
     }
   },
   methods: {
     handleValueUpdate (val) {
       let hue = (this.direction === 0 ? 1 - val : val) * 360
-      this.$emit('update:value', hue)
+      this.updateHsvValue({
+        h: hue
+      })
     }
   }
 }

@@ -11,26 +11,17 @@
 
 <script>
 import tinycolor from 'tinycolor2'
-import Input from '../Input'
+import ColorValueInput from './mixins/_ColorValueInput'
 
 export default {
   name: 'ColorValueHex',
-  components: {
-    'veui-input': Input
-  },
+  mixins: [
+    ColorValueInput
+  ],
   props: {
     hue: Number,
     saturation: Number,
-    brightness: Number,
-    readonly: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-
-    }
+    brightness: Number
   },
   computed: {
     hexValue () {
@@ -46,7 +37,7 @@ export default {
       if (!/^#[0-9A-F]{6}$/i.test(val)) {
         return
       }
-      this.$emit('update:hsb', tinycolor(val).toHsv())
+      this.updateHsvValue(tinycolor(val).toHsv())
     },
     handleValueBlur () {
       // 如果输入的值不合法就不触发事件，但希望能把输入框里的非法值改成当前的正确值，所以就这个处理下

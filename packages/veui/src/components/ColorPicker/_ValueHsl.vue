@@ -25,32 +25,19 @@
 </template>
 
 <script>
-import Input from '../Input'
 import tinycolor from 'tinycolor2'
 import {clamp} from 'lodash'
-import { numeric } from '../../directives'
+import ColorValueInput from './mixins/_ColorValueInput'
 
 export default {
   name: 'ColorValueHsl',
-  components: {
-    'veui-input': Input
-  },
-  directives: {
-    numeric
-  },
+  mixins: [
+    ColorValueInput
+  ],
   props: {
     hue: Number,
     saturation: Number,
-    brightness: Number,
-    readonly: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-
-    }
+    brightness: Number
   },
   computed: {
     hsl () {
@@ -71,7 +58,7 @@ export default {
       if (isNaN(val)) {
         return
       }
-      this.$emit('update:hsb', {
+      this.updateHsvValue({
         h: val,
         s: this.saturation,
         v: this.brightness
@@ -82,7 +69,7 @@ export default {
       if (isNaN(val)) {
         return
       }
-      this.$emit('update:hsb', {
+      this.updateHsvValue({
         h: this.hue,
         s: val,
         v: this.brightness
@@ -93,7 +80,7 @@ export default {
       if (isNaN(val)) {
         return
       }
-      this.$emit('update:hsb', tinycolor({
+      this.updateHsvValue(tinycolor({
         h: this.hue,
         s: this.saturation,
         l: val

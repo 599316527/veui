@@ -7,19 +7,17 @@
   </div>
   <div class="veui-color-swatch-color" v-if="colorFormatVariant">
     <component :is="'veui-color-value-' + colorFormatVariant"
-      :hue="hsb.h"
-      :saturation="hsb.s"
-      :brightness="hsb.v"
+      :hue="hsva.h"
+      :saturation="hsva.s"
+      :brightness="hsva.v"
       :readonly="readonly"
-      @update:hsb="handleHsbValueUpdate"
     ></component>
   </div>
   <div class="veui-color-swatch-alpha" v-if="hasAlphaValue">
     <div>透明度</div>
     <veui-color-value-alpha
-      :value="hsb.a"
+      :alpha="hsva.a"
       :readonly="readonly"
-      @update:alpha="handleAlphaValueUpdate"
     ></veui-color-value-alpha>
     <div>%</div>
   </div>
@@ -32,8 +30,8 @@ import ValueHsl from './_ValueHsl'
 import ValueRgb from './_ValueRgb'
 import ValueHex from './_ValueHex'
 import ValueAlpha from './_ValueAlpha'
-import {formatHsla} from '../../utils/color'
 import ui from '../../mixins/ui'
+import ColorHomer from './mixins/_ColorHomer'
 
 const swatchSizes = ['small', 'normal']
 const formatVariants = ['hex', 'rgb', 'hsl']
@@ -46,35 +44,18 @@ export default {
     'veui-color-value-hex': ValueHex,
     'veui-color-value-alpha': ValueAlpha
   },
-  model: {
-    prop: 'color',
-    event: 'update:color'
-  },
   mixins: [
-    ui
+    ui,
+    ColorHomer
   ],
   props: {
-    color: {
-      type: String,
-      default: '#fff'
-    },
-    ui: {
-      type: String,
-      // (small|normal)[ (hex|rgb|hsl)[ alpha]]
-      default: 'normal'
-    },
     readonly: {
       type: Boolean,
       default: false
     }
   },
-  data () {
-    return {
-
-    }
-  },
   computed: {
-    hsb () {
+    hsva () {
       let colors = tinycolor(this.color).toHsv()
       return Object.keys(colors).reduce(function (obj, key) {
         obj[key] = Math.round(colors[key] * 100) / 100
@@ -93,17 +74,6 @@ export default {
     },
     hasAlphaValue () {
       return this.uiProps.includes('alpha')
-    }
-  },
-  methods: {
-    updateColor (color) {
-      this.$emit('update:color', formatHsla(tinycolor(color).toHsl()))
-    },
-    handleAlphaValueUpdate (alpha) {
-      this.updateColor(Object.assign({}, this.hsb, {a: alpha}))
-    },
-    handleHsbValueUpdate (hsb) {
-      this.updateColor(Object.assign({}, this.hsb, hsb))
     }
   }
 }

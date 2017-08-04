@@ -1,7 +1,7 @@
 <template>
 <div class="veui-color-alpha-slider">
   <veui-slider :value="value" :direction="direction" v-bind="sliderSize"
-    @update:value="handleValueUpdate"
+    @update:value="updateAlphaValue"
     @dragstart="$emit('dragstart')"
     @dragend="$emit('dragend')">
     <div :style="{
@@ -14,30 +14,12 @@
 </template>
 
 <script>
-import {horizonalSliderSize, verticalSliderSize} from './_slider-sizes'
-import Slider from './Slider'
+import ColorSlider from './mixins/_ColorSlider'
 
 export default {
   name: 'ColorAlphaSlider',
-  components: {
-    'veui-slider': Slider
-  },
-  props: {
-    value: Number,
-    direction: Number
-  },
-  data () {
-    return {}
-  },
-  computed: {
-    sliderSize () {
-      return this.direction === 0 ? horizonalSliderSize : verticalSliderSize
-    }
-  },
-  methods: {
-    handleValueUpdate (val) {
-      this.$emit('update:value', val)
-    }
-  }
+  mixins: [
+    ColorSlider
+  ]
 }
 </script>
