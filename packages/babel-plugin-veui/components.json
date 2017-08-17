@@ -160,6 +160,10 @@
     "path": "RadioboxGroup.vue"
   },
   {
+    "name": "RegionPicker",
+    "path": "RegionPicker.vue"
+  },
+  {
     "name": "Searchbox",
     "path": "Searchbox.vue"
   },
@@ -182,6 +186,10 @@
   {
     "name": "Span",
     "path": "Span.vue"
+  },
+  {
+    "name": "Steps",
+    "path": "Steps.vue"
   },
   {
     "name": "Switch",

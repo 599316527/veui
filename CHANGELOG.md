@@ -1,7 +1,24 @@
+### 0.2.4
+
+* [^] 改善 `Button`、`Table` 组件的样式。
+* [^] 为 `Link` 组件增加 `fallback` prop，用于指定无链接时渲染的容器标签名。
+* [^] 为 `Steps` 添加路由支持。
+* [^] `Select` 组件选项值支持 `''`（空字符串）或 `0`。
+
+### 0.2.3
+
+* [^] 修复 `0.2.2` 版本 npm 包的问题。
+
 ### 0.2.2
 
-* [^] `SearchBox` 重命名为 `Searchbox`。**[Breaking change]**
 * [+] 增加 `$alert`、`$confirm`、`$prompt` 插件。
+* [+] 增加 `RegionPicker` 组件。
+* [+] 增加 `Steps` 组件。
+* [^] `SearchBox` 重命名为 `Searchbox`。**[Breaking change]**
+* [^] 去除 `Breadcrumb`、`Table`、`Tabs` 中对 Vue 内部函数的依赖。
+* [+] 为 `Overlay` 组件增加 `open.sync` 支持。
+* [^] 修复 `outside` 指令重复添加事件绑定的问题。
+* [^] 修复 `Calendar` 组件年份选择视图前后选择不正确的问题。
 
 ### 0.2.1
 

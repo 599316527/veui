@@ -20,12 +20,11 @@ import Toast from './Toast'
 import Alert from './Alert'
 import ConfirmBox from './ConfirmBox'
 import AlertBox from './AlertBox'
-// import SpecialDialog from './SpecialDialog'
 import Tabs from './Tabs'
 import Switch from './Switch'
-// import ButtonGroup from './ButtonGroup'
 import Searchbox from './Searchbox'
-import ColorPicker from './ColorPicker'
+import Steps from './Steps'
+import RegionPicker from './RegionPicker'
 
 export default [
   {
@@ -169,14 +168,19 @@ export default [
     component: Switch
   },
   {
-    path: '/search-box',
+    path: '/searchbox',
     name: 'Searchbox',
     component: Searchbox
   },
   {
-    path: '/color-picker',
-    name: 'ColorPicker',
-    component: ColorPicker
+    path: '/steps',
+    name: 'Steps',
+    component: Steps
+  },
+  {
+    path: '/regionpicker',
+    name: 'RegionPicker',
+    component: RegionPicker
   }
   // {
   //   path: '/buttonGroup',

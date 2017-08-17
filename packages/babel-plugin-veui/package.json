@@ -1,10 +1,11 @@
 {
   "name": "babel-plugin-veui",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Import VEUI components with ease.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "node ./build/components.js && babel src --out-dir dist",
+    "build": "npm run components && babel src --out-dir dist",
+    "components": "node ./build/components.js",
     "test": "npm run build && ava",
     "prepare": "npm build"
   },
