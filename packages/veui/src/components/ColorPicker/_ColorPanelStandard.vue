@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import tinycolor from 'tinycolor2'
 import ColorSwatch from './ColorSwatch'
 import ValueAlphaGroup from './_ValueAlphaGroup'
 import ColorPanel from './mixins/_ColorPanel'

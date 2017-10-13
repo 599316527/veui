@@ -17,6 +17,7 @@
     "bytes": "^3.0.0",
     "lodash": "^4.17.4",
     "tether": "^1.4.0",
+    "tinycolor2": "^1.4.1",
     "vue-awesome": "^2.3.1",
     "wicg-focus-ring": "^2.0.1"
   },

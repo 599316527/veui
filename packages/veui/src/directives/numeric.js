@@ -1,7 +1,5 @@
 export default {
   bind (el, { modifiers }, vnode) {
-    let contextComponent = vnode.context
-
     if (el.tagName.toLowerCase() !== 'input') {
       return
     }
