@@ -21,8 +21,11 @@ function testIndeterminate () {
   let checkbox = document.createElement('input')
   checkbox.type = 'checkbox'
   checkbox.indeterminate = true
+  document.body.appendChild(checkbox)
   checkbox.click()
-  return !checkbox.checked
+  let needPatch = !checkbox.checked
+  checkbox.parentNode.removeChild(checkbox)
+  return needPatch
 }
 
 // IE won't trigger change event for indeterminate checkboxes
@@ -64,4 +67,18 @@ export function patchIndeterminate (element) {
     event.initEvent('change', true, false)
     element.dispatchEvent(event)
   }, false)
+}
+
+/**
+ * 判断两个元素是否存在父子关系。
+ * IE9 的 SVGSVGElement 上没有 contains 方法，做下 hack 。
+ *
+ * @param {Element} parentElem 父元素
+ * @param {Element} childElem 子元素
+ * @return {boolean}
+ */
+export function contains (parentElem, childElem) {
+  return parentElem.contains
+    ? parentElem.contains(childElem)
+    : document.body.contains.call(parentElem, childElem)
 }

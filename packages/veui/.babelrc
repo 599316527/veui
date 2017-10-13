@@ -7,10 +7,17 @@
     [
       "veui",
       {
-        "package": "veui-theme-dux",
-        "path": "components",
-        "fileName": "${module}.less",
-        "transform": "kebab-case"
+        "modules": [
+          {
+            "package": "veui-theme-x",
+            "fileName": "${module}.less"
+          },
+          {
+            "package": "veui-theme-x",
+            "fileName": "${module}.js",
+            "transform": false
+          }
+        ]
       }
     ],
     "lodash",
@@ -27,7 +34,7 @@
   "env": {
     "test": {
       "presets": ["env", "stage-2"],
-      "plugins": [ "istanbul" ]
+      "plugins": ["istanbul"]
     }
   }
 }

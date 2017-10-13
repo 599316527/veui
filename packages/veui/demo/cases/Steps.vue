@@ -14,6 +14,10 @@
       <veui-steps :steps="steps" :ui="`full${vertical ? ' vertical' : ''}`" :current="current - 1"></veui-steps>
     </section>
     <section>
+      <h2>小型样式：</h2>
+      <veui-steps :steps="steps" :current="current - 1" :ui="`small ${vertical ? 'vertical' : ''}`"></veui-steps>
+    </section>
+    <section>
       <h2>自定义模板：</h2>
       <veui-steps :steps="steps" :ui="`full${vertical ? ' vertical' : ''}`" :current="current - 1">
         <template slot="label" scope="step">{{ step.label }} <veui-icon class="star" name="star"></veui-icon></template>
@@ -35,7 +39,7 @@ export default {
   },
   data () {
     return {
-      current: 1,
+      current: 2,
       steps: [
         { label: 'Step 1', desc: '填写信息', to: '/Tabs' },
         { label: 'Step 2', desc: '验证身份' },
@@ -53,5 +57,8 @@ input[type="number"] {
   height: 30px;
   text-align: center;
   font-size: 14px;
+}
+.star {
+  vertical-align: text-top;
 }
 </style>

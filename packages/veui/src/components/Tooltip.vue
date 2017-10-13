@@ -1,23 +1,24 @@
 <script>
 import Overlay from './Overlay'
 import { outside } from '../directives'
+import { overlay } from '../mixins'
 import { getNodes } from '../utils/context'
+import { resolveOverlayPosition } from '../utils/helper'
 import { isString } from 'lodash'
-
-const POS_MAP = {
-  left: 'right',
-  right: 'left',
-  top: 'bottom',
-  bottom: 'top'
-}
+import config from '../managers/config'
 
 const TRIGGER_MAP = {
   hover: 'mouseenter'
 }
 
+config.defaults({
+  'tooltip.hideDelay': 300
+})
+
 export default {
   name: 'veui-tooltip',
   directives: { outside },
+  mixins: [overlay],
   components: {
     'veui-overlay': Overlay
   },
@@ -31,6 +32,10 @@ export default {
     trigger: {
       type: String,
       default: 'hover'
+    },
+    hideDelay: {
+      type: Number,
+      default: config.get('tooltip.hideDelay')
     },
     custom: {
       type: Boolean,
@@ -62,26 +67,12 @@ export default {
       return getNodes(this.target, this.$vnode.context)[0]
     },
     overlay () {
-      let attachment
-      let targetAttachment
-      let position = this.position.split(' ')
-      let placement = position[0] || 'top'
-      let align = position[1] || 'center'
-      if (placement === 'left' || placement === 'right') {
-        attachment = `${align} ${POS_MAP[placement]}`
-        targetAttachment = `${align} ${placement}`
-      } else {
-        attachment = `${POS_MAP[placement]} ${align}`
-        targetAttachment = `${placement} ${align}`
-      }
       return {
-        attachment: attachment,
-        targetAttachment: targetAttachment,
+        ...resolveOverlayPosition(this.position),
         constraints: [
           {
             to: 'window',
-            attachment: 'together',
-            pin: true
+            attachment: 'together'
           }
         ]
       }
@@ -90,7 +81,8 @@ export default {
       return {
         handler: this.closeHandler,
         refs: this.targetNode,
-        trigger: this.localTrigger.close
+        trigger: this.localTrigger.close,
+        delay: this.hideDelay
       }
     }
   },
@@ -138,7 +130,7 @@ export default {
         target={this.targetNode}
         open={this.localOpen}
         options={this.overlay}
-        overlayClass="veui-tooltip-box">
+        overlayClass={this.mergeOverlayClass('veui-tooltip-box')}>
         <div class="veui-tooltip" ui={this.ui} {...{directives}}>
           <div class="veui-tooltip-content">
             { this.$slots.default }

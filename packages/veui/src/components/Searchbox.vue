@@ -1,13 +1,14 @@
 <template>
 <div class="veui-searchbox"
   :class="{'veui-disabled': realDisabled, 'veui-readonly': realReadonly, 'veui-focus': inputFocus,
-  'veui-searchbox-suggestion-expanded': expanded}"
+    'veui-searchbox-suggestion-expanded': expanded, 'veui-searchbox-clearable': clearable}"
   :ui="ui"
   @click="handleClickBox"
 >
   <veui-input
     ref="input"
     :name="realName"
+    :style="{paddingRight: `${inputRightPadding}px`}"
     :readonly="realReadonly"
     :disabled="realDisabled"
     v-bind="attrs"
@@ -15,66 +16,75 @@
     @input="handleInput"
     @focus="inputFocus = true"
     @blur="handleBlur"
-    @keyup.enter="search"
+    @keyup.enter.prevent="search"
   >
   </veui-input>
   <div class="veui-searchbox-others"
     :class="{'veui-searchbox-placeholder-hide': !placeholderShown}">
     <div class="veui-searchbox-placeholder">{{ placeholder }}</div>
     <div class="veui-searchbox-icons">
-      <button class="veui-searchbox-icon veui-searchbox-icon-cross"
+      <button class="veui-searchbox-icon veui-searchbox-icon-close"
         type="button"
         :readonly="realReadonly"
         :disabled="realDisabled"
         v-if="localValue"
         @click.stop="localValue = ''">
-        <icon name="cross-small"></icon>
+        <icon :name="icons.clear"></icon>
       </button>
       <button class="veui-searchbox-icon veui-searchbox-icon-search"
+        ref="search"
         type="button"
         :readonly="realReadonly"
         :disabled="realDisabled"
         @click.stop="search">
-        <icon name="search"></icon>
-      </button>
+        <icon :name="icons.search"></icon>
+        <veui-button :ui="ui"
+          :readonly="realReadonly"
+          :disabled="realDisabled">搜索</veui-button>
+        </button>
     </div>
   </div>
   <veui-overlay
     target="input"
-    :options="overlay"
-    :open="expanded">
+    :options="realOverlayOptions"
+    :open="expanded"
+    :overlay-class="overlayClass">
     <div class="veui-searchbox-suggestion-overlay"
       ref="box"
       :ui="ui"
       v-outside:input="close">
-      <template v-for="(item, index) in suggestions">
-        <div class="veui-searchbox-suggestion-item"
-          :key="index"
-          @click="selectSuggestion(item.value)">
-          <slot name="item" v-bind="item">
-            {{ item.value }}
-          </slot>
-        </div>
-      </template>
+      <slot name="suggestions" :suggestions="realSuggestions" :select="selectSuggestion">
+        <template v-for="(suggestion, index) in realSuggestions">
+          <div class="veui-searchbox-suggestion-item"
+            :key="index"
+            @click="selectSuggestion(suggestion)">
+            <slot name="suggestion" v-bind="suggestion">
+              {{ suggestion.label }}
+            </slot>
+          </div>
+        </template>
+      </slot>
     </div>
   </veui-overlay>
 </div>
 </template>
 
 <script>
-import { input, dropdown } from '../mixins'
+import { input, dropdown, overlay, icons } from '../mixins'
 import { pick } from 'lodash'
 import Input from './Input'
 import Icon from './Icon'
 import Overlay from './Overlay'
+import Button from './Button'
 
 export default {
   name: 'veui-searchbox',
-  mixins: [input, dropdown],
+  mixins: [input, dropdown, overlay, icons],
   components: {
     'veui-input': Input,
     Icon,
-    'veui-overlay': Overlay
+    'veui-overlay': Overlay,
+    'veui-button': Button
   },
   props: {
     ui: String,
@@ -83,6 +93,14 @@ export default {
       default () {
         return []
       }
+    },
+    clearable: {
+      type: Boolean,
+      default: false
+    },
+    replaceOnSelect: {
+      type: [Boolean, String],
+      default: false
     },
     ...pick(Input.props,
       'autocomplete',
@@ -98,7 +116,9 @@ export default {
       localValue: this.value,
       // 默认设成false，input focus事件由input控件触发
       inputFocus: false,
-      hideSuggestion: true
+      hideSuggestion: true,
+      // 该值是为了修复覆盖在input右边的一些按钮的宽度。
+      inputRightPadding: 0
     }
   },
   computed: {
@@ -111,7 +131,21 @@ export default {
       return !this.localValue && !this.inputFocus
     },
     realExpanded () {
-      return !!(this.localValue && !this.hideSuggestion && this.suggestions && this.suggestions.length)
+      return !!(this.localValue && !this.hideSuggestion && this.realSuggestions && this.realSuggestions.length)
+    },
+    valueProperty () {
+      return this.replaceOnSelect === false ? '' : (this.replaceOnSelect || 'value')
+    },
+    realSuggestions () {
+      if (!this.suggestions) {
+        return []
+      }
+      return this.suggestions.map(item => {
+        if (typeof item === 'string') {
+          return { label: item, value: item }
+        }
+        return item
+      })
     }
   },
   watch: {
@@ -142,17 +176,34 @@ export default {
     focus () {
       this.$refs.input.focus()
     },
-    selectSuggestion (text) {
+    selectSuggestion (suggestion) {
       this.hideSuggestion = true
-      this.localValue = text
+      if (this.replaceOnSelect !== false) {
+        this.localValue = suggestion[this.valueProperty]
+      }
       this.focus()
+      this.$emit('select', suggestion)
     },
     search ($event) {
       this.$emit('search', this.localValue, $event)
     },
     activate () { // for label activation
       this.focus()
+    },
+    close () {
+      this.hideSuggestion = true
     }
+  },
+  mounted () {
+    const $search = this.$refs.search
+    let fontSize = window.getComputedStyle($search).fontSize
+    fontSize = +(fontSize.substring(0, fontSize.length - 2))
+    // 各个字段端详细解释一下：
+    // fontSize：用来估摸一个clear的icon按钮的宽度
+    // 8: css写的clear-icon的右边距
+    // -3: 粗略估算 cross-small icon本身的左留白
+    // 10: input的左padding
+    this.inputRightPadding = $search.clientWidth + 10 + (this.clearable ? (fontSize + 8 - 3) : 0)
   }
 }
 </script>

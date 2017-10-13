@@ -1,9 +1,12 @@
 <template>
-<button class="veui-button" :class="{'veui-button-loading': loading}" v-bind.props="attrs" @click="$emit('click', $event)">
+<button class="veui-button" :class="{
+    'veui-button-loading': loading,
+    'veui-disabled': disabled
+  }" v-bind="attrs" @click="$emit('click', $event)">
   <template v-if="!loading"><slot></slot></template>
   <template v-else>
     <slot name="loading">
-      <icon name="loading" spin></icon>
+      <veui-icon :name="icons.loading" spin></veui-icon>
       <span class="veui-button-loading-text">加载中…</span>
     </slot>
   </template>
@@ -11,14 +14,15 @@
 </template>
 
 <script>
-import { assign } from 'lodash'
+import { omit } from 'lodash'
 import Icon from './Icon'
-import '../icons'
+import { icons } from '../mixins'
 
 export default {
   name: 'veui-button',
+  mixins: [icons],
   components: {
-    Icon
+    'veui-icon': Icon
   },
   props: {
     ui: String,
@@ -34,8 +38,7 @@ export default {
   },
   computed: {
     attrs () {
-      let attrs = assign({}, this.$props)
-      delete attrs.loading
+      let attrs = omit(this.$props, 'loading')
       attrs.disabled = this.disabled || this.loading
       return attrs
     }

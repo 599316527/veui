@@ -1,9 +1,62 @@
+### 0.3.3
+
+* [^] 修复 `config` 模块参数重载错误的问题。
+* [+] `config` 模块支持对对象配置的 `merge`、`mergeDefaults` 操作。
+* [^] 修复 `Uploader` 禁用 `input` 导致上传失败的问题。
+* [^] `Uploader` 本地校验失败的 slot 名修改为 `type-invalid` 及 `size-invalid`。**[Breaking change]**
+* [+] 为调用了 `Overlay` 组件的元素增加了指定 `overlay-options` 的功能。
+* [^] 修复了 `RegionPicker` 浮层有时会闪动的问题。
+
+### 0.3.2
+
+* [^] 修正 `Calendar` 单元格的文字颜色、背景色相关样式。
+* [^] 修复上个版本完善 `outside` 指令时引入的问题。
+
+### 0.3.1
+
+* [+] `Tooltip` 增加延时隐藏的 prop `hideDelay`。
+* [^] 修复不引入 `ButtonGroup` 时，`CheckButtonGroup` 和 `RadioButtonGroup` 部分样式丢失的问题。
+
+### 0.3.0
+
+*此版本包含多个 breaking change，升级前请仔细阅读下列说明。*
+
+* [+] **增加了统一 UI 样式包，暂定名 `veui-theme-x`**。
+* [^] 将所有图标移入样式包分别管理。
+* [^] 规范化所有公用组件文件名、组件 `name`、组件 DOM 容器 `class` 的命名规则，所有非首位的大写字母在转换为小写后增加 `-` 进行分隔。修改清单见 [#122](https://github.com/ecomfe/veui/issues/122)。**[Breaking change]**
+* [-] 移除了 `BreadCrumb` 组件的 prop `routers`。**[Breaking change]**
+* [^] `Pager` 组件 `to` 默认值修改为 `''`（空字符串），以进入 `Link` 的无跳转逻辑。**[Breaking change]**
+* [-] 移除了 `Pager` 组件的 prop `pageTotal`。**[Breaking change]**
+* [^] `Radiobox` 组件重命名为 `Radio`。**[Breaking change]**
+* [^] `RadioboxGroup` 组件重命名为 `RadioGroup`。**[Breaking change]**
+* [^] `Button` 组件的 `aux` 风格 `ui` 现在是默认样式，原有的默认样式更名为 `secondary`。**[Breaking change]**
+* [^] 为组件支持了 `:focus-ring` 的 polyfill，需要使用方自行引入。详见 [#121](https://github.com/ecomfe/veui/issues/121)。**[Breaking change]**
+* [^] 优化了 `Uploader` 组件的部分 prop、slot 的命名。详见 [#133](https://github.com/ecomfe/veui/issues/133)。**[Breaking change]**
+* [+] `Uploader` 的 prop `maxSize` 现在支持形如 `'100KB'` 的字符串作为值。
+* [^] `Uploader` 的 prop `accept` 现在需要按规范书写，。详见[此处](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#Limiting_accepted_file_types)。**[Breaking change]**
+* [^] 修复 `RegionPicker` 浮层在特殊情况下显示上的问题。
+* [+] 为 `Table` 增加 `select-mode` prop，用于提供单选模式。
+* [^] 修复 `Dropdown` 在 `ui` 为 `link` 时的样式。
+* [+] 增加 `ButtonGroup` 组件。
+* [+] 增加 `RadioButtonGroup` 组件。
+* [+] 增加 `CheckButtonGroup` 组件。
+* [+] 增加 `Sorter` 组件。
+* [+] 增加 `Progress` 组件（限 `theme-x`）。
+* [+] 所有有单一浮层逻辑的组件，新增 prop `overlay-class`，最终渲染到 `Overlay` 实例的 DOM `class` 上，方便外部区分浮层归属。
+
 ### 0.2.4
 
+* [+] 增加 `veui-loader`，确保只在 Webpack 能够 resolve 样式文件时 `babel-plugin-veui` 才注入样式 `import` 语句。
 * [^] 改善 `Button`、`Table` 组件的样式。
-* [^] 为 `Link` 组件增加 `fallback` prop，用于指定无链接时渲染的容器标签名。
-* [^] 为 `Steps` 添加路由支持。
-* [^] `Select` 组件选项值支持 `''`（空字符串）或 `0`。
+* [+] 为 `Link` 组件增加 `fallback` prop，用于指定无链接时渲染的容器标签名。
+* [+] 为 `Steps` 添加路由支持。
+* [^] `Select` 组件选项值现在支持 `''`（空字符串）或 `0`。
+* [+] 为 `Select` 组件添加未命名分组样式。
+* [+] 为 `Switch` 组件增加描述及默认 slot。
+* [+] 为 `Searchbox` 组件增加 `clearable` 属性，`suggestions` scoped slot 以及 `select` 事件，`suggestions` 支持字符串数组。
+* [^] 修正 `indeterminate` 状态 `Checkbox` 的浏览器兼容性。
+* [^] `Table` 组件的 `select` 事件将在 `selected` prop 更新后触发，`select` 事件在全选时增加 `null` 值作为当前选择项的数据，参数列表修改为和单选时一致。**[Breaking change]**
+* [^] 修正 `RegionPicker` 无法响应外部 `selected` 变化的问题。
 
 ### 0.2.3
 

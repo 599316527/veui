@@ -1,21 +1,13 @@
-import { intersection, throttle } from 'lodash'
+import { throttle } from 'lodash'
 import { outside } from '../directives'
-import config from '../managers/config'
-import { ui } from '../mixins'
-
-config.defaults({
-  'dropdown.buttonUI': 'aux'
-})
 
 export default {
-  mixins: [ui],
   directives: { outside },
   data () {
     return {
       expanded: false,
-      overlay: {
-        attachment: 'top left',
-        targetAttachment: 'bottom left',
+      localOverlayOptions: {
+        position: 'bottom left',
         constraints: [
           {
             to: 'scrollParent',
@@ -23,20 +15,10 @@ export default {
           },
           {
             to: 'window',
-            attachment: 'together',
-            pin: true
+            attachment: 'together'
           }
         ]
       }
-    }
-  },
-  computed: {
-    buttonUI () {
-      let defaultUI = config.get('dropdown.buttonUI')
-      if (!intersection(this.uiProps, ['primary', 'aux', 'alt', 'link']).length) {
-        return [...this.uiProps, defaultUI].join(' ')
-      }
-      return this.ui
     }
   },
   methods: {

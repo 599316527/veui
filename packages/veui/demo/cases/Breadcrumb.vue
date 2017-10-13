@@ -3,16 +3,18 @@
     <h1><code>&lt;veui-breadcrumb&gt;</code></h1>
     <p>
       <veui-breadcrumb :routes="items" @redirect="handleRedirect">
-        <template scope="scope">{{ scope.router.text }}</template>
-        <template slot="separator" scope="scope"><veui-icon name="angle-double-right"></veui-icon></template>
+        <template scope="scope"><em>{{ scope.route.text }}</em></template>
+        <template slot="separator" scope="scope">/</template>
       </veui-breadcrumb>
+    </p>
+    <p>
+      <veui-breadcrumb :routes="items" @redirect="handleRedirect"></veui-breadcrumb>
     </p>
   </article>
 </template>
 
 <script>
 import { Breadcrumb, Icon } from 'veui'
-import 'veui/icons'
 
 export default {
   name: 'breadcrumb-demo',
@@ -24,7 +26,7 @@ export default {
     return {
       items: [
         { to: 'http://www.baidu.com', text: 'baidu', native: true },
-        { to: 'http://brandplus.baidu.com', text: '开放服务平台', type: 'text', native: true },
+        { to: '/steps', text: '步骤条组件' },
         { text: '监听跳转事件', native: true },
         { to: 'http://www.baidu.com', text: '阻止跳转事件', native: true },
         { to: 'http://www.baidu.com', text: 'replace', replace: true, native: true },

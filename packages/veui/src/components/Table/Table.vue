@@ -12,10 +12,11 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { map, intersection, isString, includes, indexOf, keys as objectKeys } from 'lodash'
-import Body from './_Body'
-import Head from './_Head'
-import Foot from './_Foot'
+import Body from './_TableBody'
+import Head from './_TableHead'
+import Foot from './_TableFoot'
 
 export default {
   name: 'veui-table',
@@ -34,26 +35,40 @@ export default {
       }
     },
     keys: {
-      validator (value) {
-        if (!value) {
+      validator (val) {
+        if (!val) {
           return true
         }
-        return isString(value) || Array.isArray(value) && value.length === this.data.length
+        return isString(val) || Array.isArray(val) && val.length === this.data.length
       }
     },
     selectable: Boolean,
+    selectMode: {
+      type: String,
+      default: 'multiple',
+      validator (val) {
+        return val === 'single' || val === 'multiple'
+      }
+    },
+    selected: {
+      default () {
+        return []
+      }
+    },
     order: [String, Boolean],
     orderBy: String,
-    columnFilter: Array,
-    selected: Array
+    columnFilter: Array
   },
   data () {
     return {
       columns: [],
-      localSelected: [...(this.selected || [])]
+      localSelected: normalizeArray(this.selected)
     }
   },
   computed: {
+    realSelected () {
+      return this.selectMode === 'multiple' ? this.localSelected : (this.localSelected[0] || null)
+    },
     realColumns () {
       if (!this.columnFilter) {
         return this.columns
@@ -71,7 +86,7 @@ export default {
       return keys.map(String)
     },
     selectedItems () {
-      return (this.localSelected || []).reduce((selectedItems, key) => {
+      return this.localSelected.reduce((selectedItems, key) => {
         selectedItems[key] = this.getItem(key)
         return selectedItems
       }, {})
@@ -93,40 +108,67 @@ export default {
   },
   methods: {
     select (selected, index) {
+      let item = null
       if (index !== undefined) {
-        let item = this.data[index]
+        item = this.data[index]
         let key = this.realKeys[index]
         if (selected) {
-          this.localSelected.push(key)
+          if (this.selectMode === 'multiple') {
+            this.localSelected.push(key)
+          } else {
+            this.localSelected = [key]
+          }
         } else {
           this.localSelected.splice(indexOf(this.localSelected, key), 1)
         }
-        this.$emit('select', selected, item, this.selectedItems)
       } else {
         if (selected) {
           this.localSelected = [...this.realKeys]
         } else {
           this.localSelected = []
         }
-        this.$emit('select', selected, this.selectedItems)
       }
-      this.$emit('update:selected', this.localSelected)
+      this.$emit('update:selected', this.realSelected)
+      this.$emit('select', selected, item, this.selectedItems)
     },
     getItem (key) {
       return this.data[indexOf(this.realKeys, key)]
     },
     sort (field, order) {
       this.$emit('sort', field, order)
+    },
+    validateSelected (val = this.selected) {
+      if (this.selectMode === 'single' && Array.isArray(this.selected)) {
+        Vue.util.warn('`selected` should not be an array when `select-mode` is `single`.')
+        return false
+      } else if (this.selectMode === 'multiple' && !Array.isArray(this.selected)) {
+        Vue.util.warn('`selected` should be an array when `select-mode` is `multiple`.')
+        return false
+      }
+      return true
     }
   },
+  created () {
+    this.validateSelected()
+  },
   watch: {
-    selected (value) {
-      this.localSelected = value
+    selected (val) {
+      if (this.validateSelected(val)) {
+        this.localSelected = normalizeArray(val)
+      }
     },
-    realKeys (value) {
-      this.localSelected = intersection(this.localSelected, value)
-      this.$emit('update:selected', this.localSelected)
+    realKeys (val) {
+      this.localSelected = intersection(this.localSelected, val)
+      this.$emit('update:selected', this.realSelected)
     }
   }
+}
+
+function normalizeArray (val) {
+  if (val == null) {
+    return []
+  }
+
+  return Array.isArray(val) ? val : [val]
 }
 </script>

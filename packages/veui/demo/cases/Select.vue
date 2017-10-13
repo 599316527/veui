@@ -15,9 +15,9 @@
     </section>
     <section>
       <h2>Slot 样式：</h2>
-      <veui-select v-bind="attrs" v-model="defaultValue3">
+      <veui-select v-bind="attrs" v-model="defaultValue3" ui="alt">
         <template slot="option" scope="props">
-          <span>{{ props.label }}</span>
+          {{ props.label }}
         </template>
       </veui-select>
     </section>
@@ -25,7 +25,7 @@
       <h2>Slot 样式 2：</h2>
       <veui-select v-bind="attrs" v-model="defaultValue4">
         <template slot="option" scope="props">
-          <span class="veui-option-label">{{ props.label }}</span>
+          <span class="veui-option-label-text">{{ props.label }}</span>
           <icon name="eye"></icon>
         </template>
       </veui-select>
@@ -34,7 +34,7 @@
       <h2>Slot 样式 3：</h2>
       <veui-select v-bind="attrs" v-model="defaultValue1">
         <template slot="option" scope="props">
-          <radiobox :checked="props.selected">{{ props.label }}</radiobox>
+          <radio :checked="props.selected">{{ props.label }}</radio>
         </template>
       </veui-select>
     </section>
@@ -50,15 +50,17 @@
       <h2>Slot 分组样式 1：</h2>
       <veui-select v-bind="optGroupAttrs" v-model="defaultValue7">
         <template slot="option" scope="props">
-          <span>{{ props.label }}</span>
+          {{ props.label }}
         </template>
       </veui-select>
     </section>
     <section>
       <h2>Slot 分组样式 2：</h2>
-      <veui-select v-bind="optGroupAttrs" v-model="defaultValue8">
+      <veui-select v-bind="optGroupAttrs" v-model="defaultValue8" :overlay-options="{
+          position: 'bottom right'
+        }">
         <template slot="option" scope="props">
-          <span class="veui-option-label">{{ props.label }}</span>
+          <span class="veui-option-label-text">{{ props.label }}</span>
           <icon name="gift"></icon>
         </template>
       </veui-select>
@@ -72,7 +74,7 @@
 
 <script>
 import bus from '../bus'
-import { Icon, Select, Option, Radiobox } from 'veui'
+import { Icon, Select, Option, Radio } from 'veui'
 import type from 'veui/managers/type'
 import 'vue-awesome/icons/eye'
 import 'vue-awesome/icons/gift'
@@ -82,7 +84,7 @@ export default {
   components: {
     'veui-select': Select,
     'veui-option': Option,
-    'radiobox': Radiobox,
+    'radio': Radio,
     'icon': Icon
   },
   data () {
@@ -227,3 +229,16 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.veui-option-label {
+  &-text,
+  .veui-icon {
+    vertical-align: middle;
+  }
+
+  .veui-icon {
+    margin-left: 5px;
+  }
+}
+</style>

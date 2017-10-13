@@ -6,13 +6,13 @@
     <slot v-bind="step" :index="index">
       <div class="veui-steps-step-index">
         <slot name="index" v-bind="step" :index="index">
-          <veui-icon v-if="index < current" name="check"></veui-icon>
+          <veui-icon v-if="index < current" :name="icons.success"></veui-icon>
           <template v-else>{{ index + 1 }}</template>
         </slot>
       </div>
       <div class="veui-steps-step-content" v-if="step.label">
-        <h3 class="veui-steps-step-label"><slot name="label">{{ step.label }}</slot></h3>
-        <p v-if="step.desc" class="veui-steps-step-desc"><slot name="desc">{{ step.desc }}</slot></p>
+        <h3 class="veui-steps-step-label"><slot name="label" v-bind="step" :index="index">{{ step.label }}</slot></h3>
+        <p v-if="step.desc" class="veui-steps-step-desc"><slot name="desc" v-bind="step" :index="index">{{ step.desc }}</slot></p>
       </div>
     </slot>
   </veui-link>
@@ -22,9 +22,11 @@
 <script>
 import Icon from './Icon'
 import Link from './Link'
+import { icons } from '../mixins'
 
 export default {
   name: 'veui-steps',
+  mixins: [icons],
   components: {
     'veui-icon': Icon,
     'veui-link': Link

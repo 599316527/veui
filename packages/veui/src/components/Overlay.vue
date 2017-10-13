@@ -13,10 +13,11 @@
 
 <script>
 import Tether from 'tether'
-import { assign, isObject, isString } from 'lodash'
+import { assign } from 'lodash'
 import { getNodes } from '../utils/context'
 import overlayManager from '../managers/overlay'
 import config from '../managers/config'
+import { getClassPropDef } from '../utils/helper'
 
 config.defaults({
   'overlay.baseZIndex': 200
@@ -30,13 +31,8 @@ export default {
   name: 'veui-overlay',
   uiTypes: ['overlay'],
   props: {
+    overlayClass: getClassPropDef(),
     ui: String,
-    overlayClass: {
-      validator (value) {
-        return isObject(value) || isString(value)
-      },
-      default: null
-    },
     open: {
       type: Boolean,
       default: false
@@ -120,7 +116,7 @@ export default {
       }
 
       if (this.targetNode) {
-        const options = assign({}, this.options, {
+        let options = assign({}, this.options, {
           element: this.$refs.box,
           target: this.targetNode
         })
@@ -133,7 +129,9 @@ export default {
 
         // 修改 tether 的 options 的时候，有可能 tether 的容器元素还没显示出来，
         // 所以保险起见，统一 nextTick 触发一下 tether 的重新计算
-        this.$nextTick(() => this.tether.position())
+        this.$nextTick(() => {
+          this.tether.position()
+        })
       }
 
       this.updateNode()
