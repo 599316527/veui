@@ -6,8 +6,8 @@
   v-model="localValue"
   v-bind="attrs"
   v-on="listeners"
+  @change="change($event.target.value, $event)"
   @input="handleInput"
-  @change="$emit('change', $event.target.value, $event)"
 >
 <veui-textarea
   v-else
@@ -22,8 +22,9 @@
 
 <script>
 import { input } from '../mixins'
-import { omit, includes } from 'lodash'
 import Textarea from './Textarea'
+import { omit, includes, extend } from 'lodash'
+import { parseUnit } from '../utils/helper'
 
 const TYPE_LIST = ['text', 'password', 'hidden', 'textarea']
 
@@ -42,6 +43,8 @@ export default {
         return includes(TYPE_LIST, val)
       }
     },
+    units: Array,
+    isNumber: Boolean,
     autocomplete: String,
     placeholder: String,
     value: {
@@ -67,7 +70,7 @@ export default {
     }, {})
 
     return {
-      localValue: this.value,
+      ...this._getLocalValue(),
       listeners
     }
   },
@@ -76,6 +79,7 @@ export default {
       return {
         ...omit(this.$props,
           'selectOnFocus', 'fitContent', 'resizable',
+          'composition', 'units', 'isNumber',
           ...(this.type === 'textarea' ? ['type'] : ['rows', 'composition'])
         ),
         name: this.realName,
@@ -110,6 +114,37 @@ export default {
     },
     activate () {
       this.$refs.input.focus()
+    },
+    change (newVal, event) {
+      let { value, unit, isNumber } = parseUnit(newVal)
+
+      if (this.units && this.units.length && isNumber) {
+        unit = includes(this.units, unit) ? unit : this.defaultUnit
+      } else if (this.isNumber && !isNumber) {
+        unit = this.defaultUnit
+        value = this.defaultValue
+      } else {
+        unit = ''
+        value = newVal
+      }
+
+      this.localValue = unit ? value + ' ' + unit : value
+      this.$emit('change', this.localValue, event)
+    },
+    _getLocalValue () {
+      let { value, unit, isNumber } = parseUnit(this.value)
+
+      if (this.units && this.units.length && isNumber) {
+        unit = includes(this.units, unit) ? unit : this.units[0]
+      } else {
+        unit = ''
+      }
+
+      return {
+        localValue: unit ? value + ' ' + unit : this.value,
+        defaultValue: value,
+        defaultUnit: unit
+      }
     }
   },
   mounted () {
