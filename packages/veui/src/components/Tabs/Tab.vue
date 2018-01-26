@@ -5,11 +5,13 @@
 </template>
 
 <script>
-import { pick } from 'lodash'
+import { pick, find, uniqueId } from 'lodash'
 import { getTypedAncestorTracker } from '../../utils/helper'
+import { getIndexOfType } from '../../utils/context'
 
 export default {
   name: 'veui-tab',
+  uiTypes: ['tab'],
   mixins: [getTypedAncestorTracker('tabs')],
   props: {
     label: {
@@ -17,38 +19,59 @@ export default {
       required: true
     },
     name: String,
-    disabled: Boolean,
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     to: {
       type: String,
       default: ''
     },
-    native: Boolean
+    native: Boolean,
+    removable: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
-      index: null,
+      id: uniqueId('veui-tab-'),
       isInited: false
     }
   },
   computed: {
     isActive () {
-      return this.name
-        ? this.tabs.localActive === this.name
-        : this.tabs.localIndex === this.index
-    }
-  },
-  watch: {
-    isActive (val) {
-      this.isInited = true
+      return this.id === this.tabs.activeId
     }
   },
   created () {
-    // TODO: 如果要支持可删除tab，需要修改实现
-    this.index = this.tabs.tabs.length
+    let index = getIndexOfType(this, 'tab')
+
+    const props = ['label', 'disabled', 'to', 'native', 'removable']
+
     this.tabs.add({
-      ...pick(this, 'label', 'disabled', 'to', 'native'),
-      name: this.name || this.to
+      ...pick(this, ...props, 'id'),
+      name: this.name || this.to || this.id,
+      index
     })
+
+    props.forEach(prop => {
+      this.$watch(prop, val => {
+        find(this.tabs.items, item => item.id === this.id)[prop] = val
+      })
+    })
+
+    if (!this.isActive) {
+      let unWatchIsActive = this.$watch('isActive', () => {
+        this.isInited = true
+        unWatchIsActive()
+      })
+    } else {
+      this.isInited = true
+    }
+  },
+  destroyed () {
+    this.tabs.removeById(this.id)
   }
 }
 </script>

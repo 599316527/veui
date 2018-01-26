@@ -2,8 +2,7 @@
 import Overlay from './Overlay'
 import { outside } from '../directives'
 import { overlay } from '../mixins'
-import { getNodes } from '../utils/context'
-import { resolveOverlayPosition } from '../utils/helper'
+import { getNodes, isValidNodesResolver } from '../utils/context'
 import { isString } from 'lodash'
 import config from '../managers/config'
 
@@ -28,7 +27,11 @@ export default {
       type: String,
       default: 'top'
     },
-    target: String,
+    target: {
+      validator (v) {
+        return isValidNodesResolver(v)
+      }
+    },
     trigger: {
       type: String,
       default: 'hover'
@@ -44,11 +47,24 @@ export default {
     open: {
       type: Boolean,
       default: false
+    },
+    interactive: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
     return {
-      localOpen: this.open
+      localOpen: this.open,
+      localOverlayOptions: {
+        position: this.position,
+        constraints: [
+          {
+            to: 'window',
+            attachment: 'together'
+          }
+        ]
+      }
     }
   },
   computed: {
@@ -66,24 +82,17 @@ export default {
     targetNode () {
       return getNodes(this.target, this.$vnode.context)[0]
     },
-    overlay () {
-      return {
-        ...resolveOverlayPosition(this.position),
-        constraints: [
-          {
-            to: 'window',
-            attachment: 'together'
-          }
-        ]
-      }
-    },
     outsideOptions () {
       return {
         handler: this.closeHandler,
         refs: this.targetNode,
         trigger: this.localTrigger.close,
-        delay: this.hideDelay
+        delay: this.hideDelay,
+        excludeSelf: !this.interactive
       }
+    },
+    realOpen () {
+      return this.localOpen && !!this.targetNode
     }
   },
   watch: {
@@ -96,6 +105,12 @@ export default {
       if (this.open !== val) {
         this.$emit('update:open', val)
       }
+    },
+    target () {
+      this.localOpen = this.open
+    },
+    position (val) {
+      this.localOverlayOptions.position = val
     }
   },
   methods: {
@@ -128,9 +143,12 @@ export default {
     return (
       <veui-overlay
         target={this.targetNode}
-        open={this.localOpen}
-        options={this.overlay}
-        overlayClass={this.mergeOverlayClass('veui-tooltip-box')}>
+        open={this.realOpen}
+        options={this.realOverlayOptions}
+        overlayClass={this.mergeOverlayClass({
+          'veui-tooltip-box': true,
+          'veui-tooltip-box-transparent': !this.interactive
+        })}>
         <div class="veui-tooltip" ui={this.ui} {...{directives}}>
           <div class="veui-tooltip-content">
             { this.$slots.default }

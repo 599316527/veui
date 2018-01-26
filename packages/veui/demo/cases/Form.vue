@@ -17,8 +17,8 @@
           <veui-radiogroup ui="small" :items="storeData1.marryItems" v-model="storeData1.married"></veui-radiogroup>
         </veui-field>
 
-        <veui-field label="爱好：" field="habit">
-          <veui-checkboxgroup type="checkbox" :items="storeData1.habitItems" v-model="storeData1.habit"></veui-checkboxgroup>
+        <veui-field label="爱好：" field="hobby">
+          <veui-checkboxgroup type="checkbox" :items="storeData1.hobbyItems" v-model="storeData1.hobby"></veui-checkboxgroup>
         </veui-field>
 
         <veui-field label="生日：" field="birthday">
@@ -42,7 +42,7 @@
         </veui-field>
 
         <div class="operation">
-          <veui-button @click="() => this.$refs.form1.reset()">重置</veui-button>
+          <veui-button type="reset">重置</veui-button>
         </div>
       </veui-form>
     </section>
@@ -70,9 +70,9 @@
           </veui-field>
         </veui-fieldset>
 
-        <veui-fieldset class="salary" tip="使用 <veui-span> 来插入中间非组件内容">
+        <veui-fieldset class="salary">
           <template slot="label">
-            <veui-label>预期收入：</veui-label>💰
+            <veui-label>预期收入：</veui-label> <veui-icon name="money"></veui-icon>
           </template>
           <veui-field>
             <veui-input v-model="storeData2.start"></veui-input>
@@ -82,6 +82,9 @@
             <veui-input v-model="storeData2.end"></veui-input>
           </veui-field>
           <veui-span>万</veui-span>
+          <template slot="tip">
+            <veui-icon name="indent"></veui-icon> 使用 &lt;veui-span&gt; 来插入中间非组件内容
+          </template>
         </veui-fieldset>
       </veui-form>
     </section>
@@ -143,8 +146,8 @@
           <veui-radiogroup :items="storeData1.marryItems" v-model="storeData1.married"></veui-radiogroup>
         </veui-field>
 
-        <veui-field ui="small" label="爱好：" field="habit">
-          <veui-checkboxgroup ui="small" type="checkbox" :items="storeData1.habitItems" v-model="storeData1.habit"></veui-checkboxgroup>
+        <veui-field ui="small" label="爱好：" field="hobby">
+          <veui-checkboxgroup ui="small" type="checkbox" :items="storeData1.hobbyItems" v-model="storeData1.hobby"></veui-checkboxgroup>
         </veui-field>
 
         <veui-field label="生日：" field="birthday">
@@ -242,8 +245,8 @@
           </veui-field>
         </veui-fieldset>
 
-        <veui-field field="habit" name="habit" :rules="habitRule" label="爱好：" tip="至少选择三个">
-          <veui-checkboxgroup type="checkbox" :items="storeData4Options.habitItems" v-model="storeData4.habit"></veui-checkboxgroup>
+        <veui-field field="hobby" name="hobby" :rules="hobbyRule" label="爱好：" tip="至少选择三个">
+          <veui-checkboxgroup type="checkbox" :items="storeData4Options.hobbyItems" v-model="storeData4.hobby"></veui-checkboxgroup>
         </veui-field>
 
         <veui-fieldset label="预期收入：" class="salary" tip="联合校验，下限必须小于上限" :required="true">
@@ -311,10 +314,12 @@ import {
   Form, Fieldset, Field, Label, Span, Input,
   Button, DatePicker, Uploader, Select,
   Checkbox, CheckboxGroup, RadioGroup, Searchbox,
-  RegionPicker, Radio
+  RegionPicker, Radio, Icon
 } from 'veui'
 import moment from 'moment'
 import bus from '../bus'
+import 'vue-awesome/icons/money'
+import 'vue-awesome/icons/indent'
 
 const REGIONS_BRAND = [
   {
@@ -2414,12 +2419,13 @@ export default {
     'veui-radio': Radio,
     'veui-radiogroup': RadioGroup,
     'veui-searchbox': Searchbox,
-    'veui-region-picker': RegionPicker
+    'veui-region-picker': RegionPicker,
+    'veui-icon': Icon
   },
 
   data () {
-    let habit = ['🏸']
-    let habitItems = [
+    let hobby = ['🏸']
+    let hobbyItems = [
       {
         value: '⚽️', label: '足球'
       },
@@ -2470,16 +2476,16 @@ export default {
             value: '女', label: '女'
           }
         ],
-        habit,
-        habitItems,
+        hobby,
+        hobbyItems,
         birthday: new Date(),
         avatar: 'https://www.baidu.com/img/bd_logo1.png'
       },
       storeData2: {
         lastName: '',
         firstName: '',
-        habit,
-        habitItems,
+        hobby,
+        hobbyItems,
         phone: '18888888888',
         phoneType,
         phoneTypeOptions,
@@ -2513,7 +2519,7 @@ export default {
         name1: 'liyunteng2',
         age: null,
         desc: '',
-        habit,
+        hobby,
         phone: '18888888888',
         phoneType,
         start: null,
@@ -2521,7 +2527,7 @@ export default {
         protocol: ''
       },
       storeData4Options: {
-        habitItems,
+        hobbyItems,
         phoneTypeOptions
       },
       requiredRule: [
@@ -2566,12 +2572,12 @@ export default {
         {
           name: 'required',
           value: true,
-          triggers: 'blur,input'
+          triggers: 'input'
         },
         {
           name: 'numeric',
           value: true,
-          triggers: 'blur,input'
+          triggers: 'input'
         },
         {
           name: 'maxLength',
@@ -2579,7 +2585,7 @@ export default {
           triggers: 'change'
         }
       ],
-      habitRule: [
+      hobbyRule: [
         {
           name: 'minLength',
           value: 3,
@@ -2681,7 +2687,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~veui-theme-x/lib.less";
+@import "~veui-theme-one/lib.less";
 
 .veui-form-demo {
   h2 {

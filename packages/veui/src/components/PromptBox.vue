@@ -4,7 +4,6 @@
   :open.sync="localOpen"
   :priority="priority"
   :closable="false"
-  :width="340"
   @ok="$emit('ok')"
   @cancel="$emit('cancel')">
   <template slot="title"><slot name="title">{{ title }}</slot></template>
@@ -52,17 +51,17 @@ export default {
     }
   },
   watch: {
-    open (v) {
-      this.localOpen = v
+    open (value) {
+      this.localOpen = value
     },
-    value (v) {
-      this.localValue = v
+    value (value) {
+      this.localValue = value
     },
-    localOpen (v) {
-      this.$emit('update:open', v)
+    localOpen (value) {
+      this.$emit('update:open', value)
     },
-    localValue (v) {
-      this.$emit('input', v)
+    localValue (value) {
+      this.$emit('input', value)
     }
   }
 }

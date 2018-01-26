@@ -28,6 +28,10 @@
     "path": "Calendar.vue"
   },
   {
+    "name": "Carousel",
+    "path": "Carousel.vue"
+  },
+  {
     "name": "CheckButtonGroup",
     "path": "CheckButtonGroup.vue"
   },
@@ -104,6 +108,10 @@
     "path": "Fieldset.js"
   },
   {
+    "name": "FilterPanel",
+    "path": "FilterPanel.vue"
+  },
+  {
     "name": "Field",
     "path": "Form/Field.vue"
   },
@@ -149,7 +157,11 @@
   },
   {
     "name": "Pager",
-    "path": "Pager.vue"
+    "path": "Pager.js"
+  },
+  {
+    "name": "Pagination",
+    "path": "Pagination.vue"
   },
   {
     "name": "Progress",
@@ -174,6 +186,10 @@
   {
     "name": "RegionPicker",
     "path": "RegionPicker.vue"
+  },
+  {
+    "name": "Schedule",
+    "path": "Schedule.vue"
   },
   {
     "name": "Searchbox",
@@ -248,6 +264,10 @@
     "path": "Tabs/index.js"
   },
   {
+    "name": "Textarea",
+    "path": "Textarea.vue"
+  },
+  {
     "name": "Toast",
     "path": "Toast.vue"
   },
@@ -258,6 +278,30 @@
   {
     "name": "Tooltip",
     "path": "Tooltip.vue"
+  },
+  {
+    "name": "Transfer",
+    "path": "Transfer/Transfer.vue"
+  },
+  {
+    "name": "Transfer",
+    "path": "Transfer"
+  },
+  {
+    "name": "Transfer",
+    "path": "Transfer/index.js"
+  },
+  {
+    "name": "Tree",
+    "path": "Tree/Tree.vue"
+  },
+  {
+    "name": "Tree",
+    "path": "Tree"
+  },
+  {
+    "name": "Tree",
+    "path": "Tree/index.js"
   },
   {
     "name": "Uploader",

@@ -6,8 +6,10 @@
     'veui-option-selected': selected
   }"
   @click.stop="select">
-  <span class="veui-option-label"><slot>{{ label }}</slot></span>
-  <icon class="veui-option-checkmark" v-if="selected" :name="icons.checked"></icon>
+  <slot>
+    <span class="veui-option-label"><slot name="label">{{ label }}</slot></span>
+    <icon class="veui-option-checkmark" v-if="selected" :name="icons.checked"></icon>
+  </slot>
 </div>
 </template>
 
@@ -23,7 +25,9 @@ export default {
   },
   props: {
     label: [String, Number],
-    value: [String, Number],
+    value: {
+      required: true
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -39,6 +43,13 @@ export default {
       if (!this.disabled) {
         this.$emit('select', this.value)
       }
+    }
+  },
+  mounted () {
+    if (this.selected) {
+      this.$nextTick(() => {
+        this.$el.scrollIntoView()
+      })
     }
   }
 }

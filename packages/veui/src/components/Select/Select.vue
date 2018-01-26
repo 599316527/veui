@@ -38,7 +38,10 @@
               :selected="subOption.value === value"
               :key="subOption.value"
               @select="handleSelect(subOption)">
-              <slot name="option" v-bind="subOption" :selected="option.value === value"></slot>
+              <slot v-if="$scopedSlots.option" name="option" v-bind="subOption" :selected="option.value === value"></slot>
+              <template v-if="$scopedSlots['option-label']" slot="label">
+                <slot name="option-label" v-bind="subOption" :selected="option.value === value"></slot>
+              </template>
             </veui-option>
           </div>
           <veui-option
@@ -48,7 +51,10 @@
             :selected="option.value === value"
             :key="option.value"
             @select="handleSelect(option)">
-              <slot name="option" v-bind="option" :selected="option.value === value"></slot>
+            <slot v-if="$scopedSlots.option" name="option" v-bind="option" :selected="option.value === value"></slot>
+            <template v-if="$scopedSlots['option-label']" slot="label">
+              <slot name="option-label" v-bind="option" :selected="option.value === value"></slot>
+            </template>
           </veui-option>
         </template>
       </slot>
@@ -58,12 +64,12 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import Icon from '../Icon'
 import Button from '../Button'
 import Option from './Option'
 import Overlay from '../Overlay'
 import { input, icons, overlay, dropdown } from '../../mixins'
+import warn from '../../utils/warn'
 
 export default {
   name: 'veui-select',
@@ -141,7 +147,7 @@ function extractOptions (options, map) {
   options.forEach(({ label, value, options }) => {
     if (value != null) {
       if (map[value]) {
-        Vue.utils.warn(`Duplicate item value [${value}] for select options.`)
+        warn(`Duplicate item value [${value}] for select options.`)
       }
       map[value] = label
     }

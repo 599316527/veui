@@ -5,8 +5,8 @@
     <div class="veui-calendar-head">
       <button type="button" v-if="pIndex === 0 || p.view !== 'days'" class="veui-calendar-prev" @click="step(false, p.view)" :disabled="disabled || readonly"><veui-icon :name="icons.prev"></veui-icon></button>
       <template v-if="p.view === 'days'">
-        <button class="veui-calendar-select" @click="setView(pIndex, 'years')" :disabled="disabled || readonly"><b>{{ p.year }}</b> 年 <veui-icon :name="icons.expand"></veui-icon></button>
-        <button class="veui-calendar-select" @click="setView(pIndex, 'months')" :disabled="disabled || readonly"><b>{{ p.month + 1 }}</b> 月 <veui-icon :name="icons.expand"></veui-icon></button>
+        <button type="button" class="veui-calendar-select" @click="setView(pIndex, 'years')" :disabled="disabled || readonly"><b>{{ p.year }}</b> 年 <veui-icon :name="icons.expand"></veui-icon></button>
+        <button type="button" class="veui-calendar-select" @click="setView(pIndex, 'months')" :disabled="disabled || readonly"><b>{{ p.month + 1 }}</b> 月 <veui-icon :name="icons.expand"></veui-icon></button>
       </template>
       <template v-if="p.view === 'months'">
         <span class="veui-calendar-label"><b>{{ p.year }}</b> 年</span>
@@ -14,7 +14,7 @@
       <template v-if="p.view === 'years'">
         <span class="veui-calendar-label"><b>{{ p.year - p.year % 10 }}–{{ p.year - p.year % 10 + 9 }}</b> 年</span>
       </template>
-      <button v-if="pIndex === panels.length - 1 || p.view !== 'days'" class="veui-calendar-next" @click="step(true, p.view)" :disabled="disabled || readonly"><veui-icon :name="icons.next"></veui-icon></button>
+      <button type="button" v-if="pIndex === panels.length - 1 || p.view !== 'days'" class="veui-calendar-next" @click="step(true, p.view)" :disabled="disabled || readonly"><veui-icon :name="icons.next"></veui-icon></button>
     </div>
     <div class="veui-calendar-body" :class="{ 'veui-calendar-multiple-range': multiple && range }">
       <table>
@@ -29,8 +29,14 @@
               <td v-for="day in week"
                 :key="`${day.year}-${day.month + 1}-${day.date}`"
                 :class="getDateClass(day, p)">
-                <button v-if="fillMonth && panel === 1 || day.month === p.month" @click="selectDay(pIndex, day)"
-                  @mouseenter="markEnd(day)" @focus="markEnd(day)" :disabled="realDisabled || realReadonly || day.isDisabled">{{ day.date }}</button>
+                <button type="button" v-if="fillMonth && panel === 1 || day.month === p.month" @click="selectDay(day)"
+                  @mouseenter="markEnd(day)" @focus="markEnd(day)" :disabled="realDisabled || realReadonly || day.isDisabled">
+                  <slot name="date" v-bind="{
+                    year: day.year,
+                    month: day.month,
+                    date: day.date
+                  }">{{ day.date }}</slot>
+                </button>
               </td>
             </tr>
           </tbody>
@@ -38,14 +44,14 @@
         <tbody v-else-if="p.view === 'months'">
           <tr v-for="i in 3" :key="i">
             <td v-for="j in 4" :class="getMonthClass(p, i, j)" :key="j">
-              <button @click="selectMonth(pIndex, (i - 1) * 4 + j - 1)">{{ (i - 1) * 4 + j }} 月</button>
+              <button type="button" @click="selectMonth(pIndex, (i - 1) * 4 + j - 1)">{{ (i - 1) * 4 + j }} 月</button>
             </td>
           </tr>
         </tbody>
         <tbody v-else-if="p.view === 'years'">
           <tr v-for="i in 3" :key="i">
             <td v-for="j in 4" :class="getYearClass(p, i, j)" :key="j">
-              <button v-if="(i - 1) * 4 + j - 1 < 10" @click="selectYear(pIndex, p.year - p.year % 10 + (i - 1) * 4 + j - 1)">{{ p.year - p.year % 10 + (i - 1) * 4 + j - 1 }}</button>
+              <button type="button" v-if="(i - 1) * 4 + j - 1 < 10" @click="selectYear(pIndex, p.year - p.year % 10 + (i - 1) * 4 + j - 1)">{{ p.year - p.year % 10 + (i - 1) * 4 + j - 1 }}</button>
             </td>
           </tr>
         </tbody>
@@ -106,7 +112,7 @@ export default {
     weekStart: {
       type: Number,
       default: config.get('calendar.weekStart'),
-      validate (val) {
+      validator (val) {
         return val >= 0 && val <= 6
       }
     },
@@ -150,7 +156,7 @@ export default {
     viewMonth () {
       return `${this.year}/${this.month}`
     },
-    localSelected () {
+    realSelected () {
       return this.selected ? this.selected : (this.multiple ? [] : null)
     },
     panels () {
@@ -247,22 +253,24 @@ export default {
       let month = (i - 1) * 4 + j - 1
       return {
         'veui-calendar-today': month === this.today.getMonth() && panel.year === this.today.getFullYear(),
-        'veui-calendar-selected': (this.localSelected && !this.multiple && !this.range)
-          ? (month === this.localSelected.getMonth() && panel.year === this.localSelected.getFullYear()) : false
+        'veui-calendar-selected': (this.realSelected && !this.multiple && !this.range)
+          ? (month === this.realSelected.getMonth() && panel.year === this.realSelected.getFullYear()) : false
       }
     },
     getYearClass (panel, i, j) {
       let year = panel.year - panel.year % 10 + (i - 1) * 4 + j - 1
       return {
         'veui-calendar-today': year === this.today.getFullYear(),
-        'veui-calendar-selected': (this.localSelected && !this.multiple && !this.range)
-          ? year === this.localSelected.getFullYear() : false
+        'veui-calendar-selected': (this.realSelected && !this.multiple && !this.range)
+          ? year === this.realSelected.getFullYear() : false
       }
     },
-    selectDay (i, day) {
-      // switch month in days view
-      this.year = day.year - Math.floor((day.month - i) / 12)
-      this.month = (day.month - i + 12) % 12
+    selectDay (day) {
+      // switch month in days view if dates in previous/next months are visible
+      if (this.fillMonth && this.panel === 1) {
+        this.year = day.year
+        this.month = day.month
+      }
 
       let selected = new Date(day.year, day.month, day.date)
       if (!this.range) {
@@ -273,7 +281,7 @@ export default {
         }
 
         // multiple single days selection
-        let result = [...this.localSelected]
+        let result = [...this.realSelected]
         let pos = findIndex(result, date => {
           return isSameDay(date, selected)
         })
@@ -318,7 +326,7 @@ export default {
           if (!marked) {
             this.$set(this.picking, 1, this.picking[0])
           }
-          this.pickingRanges = mergeRange(this.picking, this.localSelected)
+          this.pickingRanges = mergeRange(this.picking, this.realSelected)
         }
         this.$emit('selectprogress', this.pickingRanges || this.picking)
       }
@@ -334,33 +342,34 @@ export default {
       }
     },
     selectMonth (i, month) {
+      // yearDiff = ⌊(currentMonth + monthDiff) / 12⌋
+      this.year += Math.floor((this.month + month - this.panels[i].month) / 12)
       this.month = (month - i + 12) % 12
-      this.year += Math.floor((month - i) / 12)
       this.setView('days')
     },
     selectYear (i, year) {
-      this.year = year - Math.floor((this.panels[i].month - i) / 12)
+      this.year = year + Math.floor((this.panels[i].month - i) / 12)
       this.setView('days')
     },
     isSelected (day) {
-      if (!this.localSelected && !this.picking) {
+      if (!this.realSelected && !this.picking) {
         return false
       }
       if (!this.range) {
         if (!this.multiple) {
           // single day
-          return isSameDay(this.localSelected, day)
+          return isSameDay(this.realSelected, day)
         }
         // multiple single days
-        return (this.localSelected || []).some(d => isSameDay(d, day))
+        return (this.realSelected || []).some(d => isSameDay(d, day))
       }
       if (!this.multiple) {
         // single range
-        let range = this.picking || this.localSelected
+        let range = this.picking || this.realSelected
         return isSameDay(range[0], day) || isSameDay(range[1], day)
       }
       // multiple ranges
-      return (this.pickingRanges || this.localSelected || []).some(selected => {
+      return (this.pickingRanges || this.realSelected || []).some(selected => {
         return isSameDay(selected[0], day) || isSameDay(selected[1], day)
       })
     },
@@ -371,12 +380,12 @@ export default {
 
       if (!this.multiple) {
         // single range
-        let range = this.picking || this.localSelected
+        let range = this.picking || this.realSelected
         return getRangePosition(day, range)
       }
 
       // multiple ranges
-      let ranges = this.pickingRanges || this.localSelected || []
+      let ranges = this.pickingRanges || this.realSelected || []
       let position = false
       for (let i = 0, j = ranges.length; i < j; i++) {
         position = getRangePosition(day, ranges[i])
@@ -416,6 +425,9 @@ export default {
           month: this.month
         })
       }
+    },
+    selected (val) {
+      this.picking = this.pickingRanges = null
     }
   }
 }

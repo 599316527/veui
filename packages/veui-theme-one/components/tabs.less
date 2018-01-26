@@ -1,0 +1,267 @@
+@import "../lib.less";
+
+.veui-tabs {
+  position: relative;
+
+  &-menu button {
+    .veui-button-transition();
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .make-margin(@margin) {
+    margin-left: @margin;
+
+    &:first-child {
+      margin-left: -10px;
+    }
+
+    &:last-child {
+      margin-right: -10px;
+    }
+  }
+
+  &-menu {
+    overflow: hidden;
+    white-space: nowrap;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: ~"calc(2.5em - 1px)";
+      width: 100%;
+      border-bottom: 1px solid @veui-gray-color-6;
+    }
+  }
+
+  &-list {
+    position: relative;
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+  }
+
+  &-item {
+    display: inline-block;
+    .make-margin(50px);
+
+    & > &-remove {
+      visibility: hidden;
+      color: @veui-text-color-weak;
+      cursor: pointer;
+      outline: none;
+
+      .veui-icon {
+        display: block;
+      }
+
+      &::after {
+        content: none;
+      }
+
+      &:hover,
+      &.focus-visible {
+        color: @veui-text-color-normal;
+      }
+
+      &:active {
+        color: @veui-gray-color-1;
+      }
+    }
+
+    &-remove:focus,
+    &:hover > &-remove,
+    &-label.focus-visible > &-remove {
+      visibility: visible;
+    }
+
+    & > &-label {
+      cursor: pointer;
+      padding: 0 10px;
+      line-height: 2.5;
+      display: inline-block;
+      text-decoration: none;
+      outline: none;
+      position: relative;
+    }
+
+    &:not(.veui-tabs-item-disabled) > &-label {
+      color: @veui-text-color-strong;
+
+      &::after {
+        content: "";
+        .absolute(_, 10px, 0, 10px);
+        height: 2px;
+        z-index: 1;
+        transition: background-color .2s;
+      }
+
+      &:hover::after {
+        background-color: @veui-gray-color-3;
+      }
+
+      &:active::after {
+        background-color: @veui-gray-color-1;
+      }
+    }
+
+    &-active > &-label {
+      &::after {
+        background-color: @veui-gray-color-1;
+      }
+    }
+
+    &:first-child {
+      &-label {
+        margin-left: -10px;
+      }
+    }
+
+    &-disabled > &-label {
+      cursor: not-allowed;
+      color: @veui-text-color-weak;
+    }
+  }
+
+  &-extra {
+    display: inline-block;
+    padding-left: 60px;
+    background-color: #fff;
+
+    .veui-tabs-list-empty + & {
+      padding-left: 0;
+    }
+
+    &.veui-tabs-extra-overflow {
+      height: 2.5em;
+      position: absolute;
+      right: 0;
+      top: 0;
+      border-bottom: 1px solid @veui-gray-color-6;
+      z-index: 2;
+    }
+  }
+
+  &-operator {
+    display: inline-block;
+    line-height: 2.5;
+    outline: none;
+    cursor: pointer;
+
+    .veui-icon {
+      margin-right: 6px;
+    }
+  }
+
+  &-item-remove,
+  &-operator .veui-icon {
+    vertical-align: top;
+    margin-top: ~"calc(@{veui-height-normal} / 2 - .5em - 1px)";
+    user-select: none;
+  }
+
+  &-scroller {
+    display: inline-block;
+    line-height: 2.5;
+    margin-left: 30px;
+
+    &-left,
+    &-right {
+      display: inline-block;
+      .make-margin(5px);
+      .size(2 * @veui-font-size-normal);
+      background-color: @veui-gray-color-8;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      outline: none;
+
+      &:hover,
+      &.focus-visible {
+        background-color: @veui-gray-color-5;
+      }
+
+      &:active {
+        background-color: @veui-gray-color-3;
+      }
+    }
+  }
+
+  &[ui~="large"] & {
+    &-menu::after,
+    &-extra,
+    &-item,
+    &-operator {
+      font-size: @veui-font-size-large;
+    }
+
+    &-item {
+      .make-margin(50px);
+    }
+
+    &-operator {
+      padding: 0 10px;
+    }
+
+    &-item-remove,
+    &-operator .veui-icon {
+      margin-top: ~"calc(@{veui-height-large} / 2 - .5em - 1px)";
+    }
+
+    &-scroller {
+      &-left,
+      &-right {
+        .size(2 * @veui-font-size-large);
+
+        .veui-icon {
+          font-size: @veui-font-size-normal;
+          vertical-align: text-top;
+        }
+      }
+    }
+  }
+
+  &[ui~="small"] & {
+    &-item {
+      .make-margin(30px);
+    }
+
+    &-menu {
+      border-bottom: none;
+    }
+  }
+
+  &[ui~="tiny"] & {
+    &-menu {
+      border-bottom: none;
+
+      &::after {
+        display: none;
+      }
+    }
+
+    &-item {
+      .make-margin(21px);
+      position: relative;
+
+      &-label::after {
+        height: 1px;
+      }
+
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 1px;
+        height: 14px;
+        background-color: @veui-gray-color-6;
+        .absolute(10px, _, _, -11px);
+      }
+
+      &:first-child::before {
+        display: none;
+      }
+    }
+  }
+}
