@@ -16,6 +16,8 @@
   "module": "index.js",
   "dependencies": {
     "bytes": "^3.0.0",
+    "classlist-polyfill": "^1.2.0",
+    "focus-visible": "^4.0.1",
     "lodash": "^4.17.4",
     "tether": "^1.4.0",
     "vue-awesome": "^2.3.1"

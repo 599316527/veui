@@ -23,7 +23,7 @@
 <script>
 import { input } from '../mixins'
 import Textarea from './Textarea'
-import { omit, includes, extend } from 'lodash'
+import { omit, includes } from 'lodash'
 import { parseUnit } from '../utils/helper'
 
 const TYPE_LIST = ['text', 'password', 'hidden', 'textarea']

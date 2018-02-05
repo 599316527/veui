@@ -23,5 +23,8 @@
   "browserslist": [
     "ie >= 9",
     "last 2 versions"
-  ]
+  ],
+  "dependencies": {
+    "all-eslint-rules": "^4.0.0"
+  }
 }
