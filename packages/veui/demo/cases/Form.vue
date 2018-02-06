@@ -2687,7 +2687,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~veui-theme-one/lib.less";
+@import "~veui-theme-vedit/lib.less";
 
 .veui-form-demo {
   h2 {

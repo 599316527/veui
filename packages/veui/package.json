@@ -81,7 +81,7 @@
     "sinon-chai": "^2.8.0",
     "url-loader": "^0.5.7",
     "veui-loader": "^1.0.0-alpha.7",
-    "veui-theme-one": "^1.0.0-alpha.7",
+    "veui-theme-vedit": "^1.0.0-alpha.7",
     "vue": "^2.3.0",
     "vue-loader": "^13.3.0",
     "vue-router": "^2.2.0",

@@ -1,0 +1,103 @@
+@import "../lib.less";
+
+.veui-button {
+  padding: 0 20px;
+  user-select: none;
+  vertical-align: middle;
+  // .veui-button-transition();
+  border: 1px solid @veui-border-color-weak;
+  // background-color: @veui-bg-color-normal;
+  background-color: transparent;
+  color: @veui-text-color-normal;
+  // border-radius: @default-border-radius;
+
+  &:not(.veui-disabled):hover {
+    color: @veui-text-color-strong;
+    background-color: @veui-bg-color-normal;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &.focus-visible {
+
+  }
+
+  &[ui~="small"] {
+    .centered-line(@veui-height-small);
+    font-size: @veui-font-size-small;
+    .make-height(@veui-height-small);
+    .padding(_, 10px);
+  }
+
+  &[ui~="tiny"] {
+    .centered-line(@veui-height-tiny);
+    font-size: @veui-font-size-small;
+    .make-height(@veui-height-tiny);
+    .padding(_, 10px);
+  }
+
+  &[ui~="round"] {
+    width: @veui-height-normal;
+    border-radius: 50%;
+
+    width: @veui-height-normal;
+    min-width: auto;
+    .padding(_, 0);
+    text-align: center;
+
+    &[ui~="small"] {
+      width: @veui-height-small;
+    }
+
+    &[ui~="tiny"] {
+      width: @veui-height-tiny;
+    }
+  }
+
+  // use class here to give IE a better experience because
+  // we disabled the current <button> element to prevent
+  // user interaction with buttons while loading
+  &.veui-disabled,
+  &.veui-disabled[ui] {
+    opacity: .7;
+  }
+
+  &-loading {
+    &,
+    &[ui] {
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+
+  .veui-icon {
+    max-width: 1em;
+
+    & + .veui-button-loading-text {
+      margin-left: 5px;
+    }
+  }
+
+  .make-height(@button-height) {
+    height: @button-height;
+    line-height: @button-height - 2px;
+
+    & > .veui-icon {
+      vertical-align: top;
+      @height: @button-height / 2 - 1px;
+      margin-top: ~"calc(@{height} - 0.5em)";
+    }
+  }
+  .make-height(@veui-height-normal);
+}
+
+.veui-button-loading-text {
+  vertical-align: top;
+
+  [ui~="round"] > &,
+  [ui~="square"] > & {
+    display: none;
+  }
+}

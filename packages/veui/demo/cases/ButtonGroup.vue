@@ -5,16 +5,13 @@
       <veui-checkbox v-model="disabled">禁用</veui-checkbox>
     </section>
     <section>
-      <veui-button-group ui="primary large" :items="items1" :disabled="disabled"></veui-button-group>
+      <veui-button-group :items="items1" :disabled="disabled"></veui-button-group>
     </section>
     <section>
-      <veui-button-group :items="items2" :disabled="disabled"></veui-button-group>
+      <veui-button-group ui="small" :items="items3" :disabled="disabled"></veui-button-group>
     </section>
     <section>
-      <veui-button-group ui="aux small" :items="items3" :disabled="disabled"></veui-button-group>
-    </section>
-    <section>
-      <veui-button-group ui="alt tiny" :items="items4" :disabled="disabled"></veui-button-group>
+      <veui-button-group ui="tiny" :items="items4" :disabled="disabled"></veui-button-group>
     </section>
   </article>
 </template>

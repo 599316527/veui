@@ -46,12 +46,16 @@ export default {
 
 <style lang="less">
 @import "~less-plugin-est/src/all.less";
-@import "~veui-theme-one/common.less";
+@import "~veui-theme-vedit/common.less";
 
 @nav-width: 240px;
-@light-bg-color: #f6f9ff;
+@light-bg-color: @veui-bg-color-weak;
 @title-height: 30px;
 @console-height: 40vh;
+
+body {
+  background-color: @veui-bg-color-strong;
+}
 
 #app {
   position: fixed;
@@ -69,14 +73,14 @@ export default {
 #main-nav {
   .absolute(0, _, 0, 0);
   width: @nav-width;
-  border-right: 1px solid #eee;
+  border-right: 1px solid @veui-border-color-weak;
   font-weight: 300;
 
   h1 {
     .centered-line(60px);
     position: relative;
     overflow: hidden;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid @veui-border-color-weak;
     margin: 0;
     font-size: 18px;
 
@@ -84,7 +88,7 @@ export default {
       display: block;
       width: 100%;
       padding: 0 24px;
-      color: #333;
+      color: @veui-text-color-normal;
       text-decoration: none;
     }
 
@@ -117,7 +121,7 @@ export default {
       display: block;
       padding: .5em 24px;
       text-decoration: none;
-      color: #999;
+      color: @veui-text-color-weak;
       outline: none;
       line-height: 2;
 
@@ -128,7 +132,7 @@ export default {
   }
 
   .router-link-active {
-    color: #3998fc;
+    color: @veui-text-color-normal;
     background-color: @light-bg-color;
     font-weight: 500;
   }
@@ -136,7 +140,7 @@ export default {
   footer {
     position: relative;
     overflow: hidden;
-    border-top: 1px solid #eee;
+    border-top: 1px solid @veui-border-color-weak;
     font-size: 12px;
 
     a {
@@ -174,10 +178,15 @@ main {
   transition: height .2s;
 
   h1 {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid @veui-border-color-weak;
     margin-bottom: 2em;
     padding-bottom: 1em;
     font-size: 18px;
+    color: @veui-text-color-strong;
+
+    code {
+      font-family: 'Courier New', Courier, monospace;
+    }
   }
 
   .console-expanded & {

@@ -1,0 +1,82 @@
+@import "./lib.less";
+
+/* Overriding est variables */
+@support-ie-version: 9999;
+@default-text-color: @veui-text-color-normal;
+@default-base-font-family: @veui-font-family;
+@default-heading-font-family: @veui-font-family;
+@default-border-radius: 2px;
+
+.global-normalize();
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 14px;
+  font-weight: @veui-font-weight-normal;
+}
+
+// only enable on Retina displays
+@media screen and (min-resolution: 2dppx) {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: @veui-font-weight-bold;
+}
+
+input,
+button,
+textarea {
+  font: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+button {
+  border-radius: 0;
+}
+
+.veui-disabled {
+  cursor: not-allowed !important;
+}
+
+a {
+  text-decoration: none;
+}
+
+a,
+[ui~="link"],
+.veui-button[ui~="link"] {
+  cursor: pointer;
+  color: @veui-link-color-normal;
+
+  &:hover,
+  &.focus-visible {
+    color: @veui-link-color-hover;
+  }
+
+  &[ui~="alert"] {
+    color: @veui-alert-color;
+  }
+
+  &[ui~="success"] {
+    color: @veui-success-color;
+  }
+
+  &[ui~="warning"] {
+    color: @veui-warning-color;
+  }
+}

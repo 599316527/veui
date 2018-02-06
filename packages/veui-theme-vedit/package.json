@@ -1,0 +1,29 @@
+{
+  "name": "veui-theme-vedit",
+  "version": "1.0.0-alpha.7",
+  "description": "One Design theme for VEUI.",
+  "keywords": [
+    "veui",
+    "vue",
+    "baidu",
+    "less"
+  ],
+  "scripts": {
+    "icons": "node build/svg2json.js && node build/icons.js",
+    "lint": "stylelint **/*.less --syntax=less"
+  },
+  "author": "ecomfe",
+  "license": "MIT",
+  "dependencies": {
+    "less-plugin-est": "^2.0.5"
+  },
+  "peerDependencies": {
+    "veui": "1.0.0-alpha.7"
+  },
+  "devDependencies": {
+    "stylelint": "^8.4.0",
+    "stylelint-config-standard": "^18.0.0",
+    "svgo": "^0.7.2",
+    "svgson": "^2.1.0"
+  }
+}
