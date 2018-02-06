@@ -2,9 +2,9 @@ import Button from './Button'
 // import Table from './Table'
 // import Pagination from './Pagination'
 // import Uploader from './Uploader'
-// import Dialog from './Dialog'
+import Dialog from './Dialog'
 // import Overlay from './Overlay'
-// import Breadcrumb from './Breadcrumb'
+import Breadcrumb from './Breadcrumb'
 // import Input from './Input'
 // import Form from './Form'
 // import Calendar from './Calendar'
@@ -12,14 +12,14 @@ import Button from './Button'
 // import Select from './Select'
 // import Dropdown from './Dropdown'
 // import Radio from './Radio'
-// import Checkbox from './Checkbox'
+import Checkbox from './Checkbox'
 // import RadioGroup from './RadioGroup'
 // import RadioButtonGroup from './RadioButtonGroup'
-// import CheckboxGroup from './CheckboxGroup'
-// import CheckButtonGroup from './CheckButtonGroup'
+import CheckboxGroup from './CheckboxGroup'
+import CheckButtonGroup from './CheckButtonGroup'
 // import Tooltip from './Tooltip'
 // import Toast from './Toast'
-// import Alert from './Alert'
+import Alert from './Alert'
 // import Tabs from './Tabs'
 // import Switch from './Switch'
 // import Searchbox from './Searchbox'
@@ -34,16 +34,16 @@ import ButtonGroup from './ButtonGroup'
 // import InputContainer from './InputContainer'
 
 export default [
-  // {
-  //   path: '/alert',
-  //   name: 'Alert',
-  //   component: Alert
-  // },
-  // {
-  //   path: '/breadcrumb',
-  //   name: 'Breadcrumb',
-  //   component: Breadcrumb
-  // },
+  {
+    path: '/alert',
+    name: 'Alert',
+    component: Alert
+  },
+  {
+    path: '/breadcrumb',
+    name: 'Breadcrumb',
+    component: Breadcrumb
+  },
   {
     path: '/button',
     name: 'Button',
@@ -64,31 +64,31 @@ export default [
   //   name: 'Carousel',
   //   component: Carousel
   // },
-  // {
-  //   path: '/checkbox',
-  //   name: 'Checkbox',
-  //   component: Checkbox
-  // },
-  // {
-  //   path: '/check-button-group',
-  //   name: 'CheckButtonGroup',
-  //   component: CheckButtonGroup
-  // },
-  // {
-  //   path: '/checkbox-group',
-  //   name: 'CheckboxGroup',
-  //   component: CheckboxGroup
-  // },
+  {
+    path: '/checkbox',
+    name: 'Checkbox',
+    component: Checkbox
+  },
+  {
+    path: '/check-button-group',
+    name: 'CheckButtonGroup',
+    component: CheckButtonGroup
+  },
+  {
+    path: '/checkbox-group',
+    name: 'CheckboxGroup',
+    component: CheckboxGroup
+  },
   // {
   //   path: '/date-picker',
   //   name: 'DatePicker',
   //   component: DatePicker
   // },
-  // {
-  //   path: '/dialog',
-  //   name: 'Dialog',
-  //   component: Dialog
-  // },
+  {
+    path: '/dialog',
+    name: 'Dialog',
+    component: Dialog
+  },
   // {
   //   path: '/dropdown',
   //   name: 'Dropdown',

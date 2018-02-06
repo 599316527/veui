@@ -55,6 +55,7 @@ export default {
 
 body {
   background-color: @veui-bg-color-strong;
+  color: white;
 }
 
 #app {
