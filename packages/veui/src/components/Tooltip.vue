@@ -1,7 +1,7 @@
 <script>
 import Overlay from './Overlay'
-import { outside } from '../directives'
-import { overlay } from '../mixins'
+import overlay from '../mixins/overlay'
+import outside from '../directives/outside'
 import { getNodes, isValidNodesResolver } from '../utils/context'
 import { isString } from 'lodash'
 import config from '../managers/config'
@@ -142,6 +142,7 @@ export default {
     }
     return (
       <veui-overlay
+        ref="overlay"
         target={this.targetNode}
         open={this.realOpen}
         options={this.realOverlayOptions}

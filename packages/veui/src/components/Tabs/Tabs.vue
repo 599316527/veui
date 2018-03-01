@@ -47,8 +47,8 @@
 import warn from '../../utils/warn'
 import Link from '../Link'
 import Icon from '../Icon'
-import { resize } from '../../directives'
-import { icons } from '../../mixins'
+import resize from '../../directives/resize'
+import icons from '../../mixins/icons'
 
 export default {
   name: 'veui-tabs',
@@ -89,10 +89,10 @@ export default {
   },
   computed: {
     tabUids () {
-      return this.items.map(item => item.id)
+      return this.items.map(({ id }) => id)
     },
     tabNames () {
-      return this.items.map(item => item.name)
+      return this.items.map(({ name }) => name)
     }
   },
   methods: {
